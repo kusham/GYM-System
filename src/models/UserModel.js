@@ -66,10 +66,28 @@ var User = db.define(
   },
   {
     timestamps: true,
-    createdAt: "CreatedAt",
-    updatedAt: "UpdatedAt",
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
     freezeTableName: true,
   }
 );
+
+// Define the relationship
+User.hasMany(User, {
+  as: "members",
+  foreignKey: {
+    allowNull: true,
+    name: "instructorId",
+    unique: false,
+  },
+});
+User.belongsTo(User, {
+  as: "instructor",
+  foreignKey: {
+    allowNull: true,
+    name: "instructorId",
+    unique: false,
+  },
+});
 
 module.exports = User;
