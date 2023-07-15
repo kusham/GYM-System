@@ -2,6 +2,9 @@ var db = require("./DatabaseConnection"); // import database connection Database
 
 // Import Models
 const User = require("../models/UserModel");
+const Workout = require("../models/WorkoutModel");
+const Equipment = require("../models/EquipmentModel");
+
 const runSeeders = require("./seeders");
 
 const dbSync = () => {
