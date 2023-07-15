@@ -4,11 +4,15 @@ const dotenv = require("dotenv");
 var bodyParser = require("body-parser");
 const cors = require("cors");
 
-var db = require("./src/config/DatabaseConnection"); // import database connection Database
+// import database connection Database
+var db = require("./src/config/DatabaseConnection"); 
 const dbSync = require("./src/config/DatabaseSync");
 
 // Import routes
 var userRoutes = require("./src/routes/UserRoutes");
+var workoutRoutes = require("./src/routes/WorkoutRoutes");
+var equipmentRoutes = require("./src/routes/UserRoutes");
+
 
 const app = express();
 dotenv.config();
@@ -24,6 +28,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/user", userRoutes);
+app.use("/api/workout", workoutRoutes);
+app.use("/api/equipment", equipmentRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
