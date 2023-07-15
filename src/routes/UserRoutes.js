@@ -1,20 +1,21 @@
-var express = require("express");
+const express = require("express");
 const { registerUser, loginUser } = require("../controllers/AuthControllers");
 const {
   getAllUsers,
   getAllMembers,
   getAllInstructors,
-  getUserById,
   getUserCountForRoles,
   getMemberById,
   getInstructorById,
   getNewRegistrants,
   assignToInstructor,
 } = require("../controllers/UserControllers");
-var router = express.Router();
+const router = express.Router();
 
 router.get("/all", function (req, res) {
-  res.send("Hello World from API. \n /registerUser \n /loginUser \n ");
+  res.send(
+    "Hello World from API. \n /registerUser \n /loginUser \n /getall \n /getallMembers \n /getallInstructors \n /getMemberById \n /getInstructorById \n /getUserCountForRoles \n /getNewRegistrants \n /assignToInstructor \n"
+  );
 });
 
 router.post("/register", registerUser);
@@ -29,6 +30,5 @@ router.get("/getUserCountForRoles", getUserCountForRoles);
 router.get("/getNewRegistrants", getNewRegistrants);
 
 router.put("/assignToInstructor", assignToInstructor);
-
 
 module.exports = router;

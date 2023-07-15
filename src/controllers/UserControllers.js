@@ -115,7 +115,7 @@ module.exports.getMemberById = async (req, res) => {
     });
     if (!member) {
       return res.status(404).json({
-        success: true,
+        success: false,
         message: "Member not found for the userID",
       });
     }
@@ -154,7 +154,7 @@ module.exports.getInstructorById = async (req, res) => {
     });
     if (!instructor) {
       return res.status(404).json({
-        success: true,
+        success: false,
         message: "instructor not found for the userID",
       });
     }

@@ -46,10 +46,10 @@ var User = db.define(
       type: Sequelize.STRING,
     },
     weight: {
-      type: Sequelize.STRING,
+      type: Sequelize.FLOAT,
     },
     height: {
-      type: Sequelize.STRING,
+      type: Sequelize.FLOAT,
     },
     city: {
       type: Sequelize.STRING,
