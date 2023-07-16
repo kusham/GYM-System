@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -34,4 +35,5 @@ export const NavItem = styled.div`
   font-size: 23px;
   font-weight: 700;
   font-family: NationalBold,Helvetica,Arial,Sans-serif;
+  cursor: pointer;
 `;

@@ -4,39 +4,40 @@ import { Container, Root } from "./style";
 import Navbar from "./components/Navigation/Navbar";
 import Homepage from "./components/Home/Homepage";
 import Footer from "./components/Footer/Footer";
-import LoginPage from "./components/auth/Login/LoginPage";
 import SignupPage from "./components/auth/Signup/SignupPage";
+import SignInPage from "./components/auth/SignIn/SignInPage";
 
 function App() {
   // Retrieve user from session storage
+  console.log(sessionStorage.getItem("user"));
   const user = JSON.parse(sessionStorage.getItem("user"));
   return (
     <Root>
+        <BrowserRouter>
       <Navbar />
       <Container>
-        <BrowserRouter>
           <Routes>
             <Route
               path="/"
               element={
-                user ? <Navigate to="dashboard" /> : <Navigate to="home" />
+                user ? <Navigate to="/dashboard" /> : <Navigate to="home" />
               }
             />
             <Route
               path="/home"
-              element={!user ? <Homepage /> : <Navigate to="dashboard" />}
+              element={!user ? <Homepage /> : <Navigate to="/dashboard" />}
             />
             <Route
               path="/auth/login"
-              element={user ? <Navigate to="dashboard" /> : <LoginPage />}
+              element={user ? <Navigate to="/dashboard" /> : <SignInPage />}
             />
             <Route
               path="/auth/signup"
-              element={user ? <Navigate to="dashboard" /> : <SignupPage />}
+              element={user ? <Navigate to="/dashboard" /> : <SignupPage />}
             />
           </Routes>
-        </BrowserRouter>
       </Container>
+        </BrowserRouter>
       <Footer />
     </Root>
   );
