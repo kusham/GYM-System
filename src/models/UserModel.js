@@ -57,6 +57,9 @@ var User = db.define(
     purpose: {
       type: Sequelize.STRING,
     },
+    specialty: {
+      type: Sequelize.STRING,
+    },
     personalInfo: {
       type: Sequelize.STRING,
     },

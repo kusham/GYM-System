@@ -11,7 +11,7 @@ const dbSync = () => {
   db.sync()
     .then(() => {
       console.log("Models synchronized with the database.");
-    //   runSeeders();
+      runSeeders();
     })
     .catch((error) => {
       console.error(

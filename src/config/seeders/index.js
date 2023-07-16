@@ -12,9 +12,9 @@ const runSeeders = async () => {
   for (const seeder of seeders) {
     try {
       await seeder.up(db.getQueryInterface(), Sequelize);
-      console.log(`Seeder ${seeder.name} executed successfully.`);
+      console.log(`Seeder executed successfully.`);
     } catch (err) {
-      console.error(`Error executing seeder ${seeder.name}:`, err);
+      console.error(`Error executing seeder:`, err);
     }
   }
 };

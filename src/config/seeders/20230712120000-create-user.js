@@ -7,8 +7,7 @@ module.exports = {
       [
         {
           userID: "A-0001",
-          firstName: "Admin",
-          lastName: "One",
+          fullName: "Admin",
           email: "adminone@gmail.com",
           password: "adminone123",
           userRole: "Admin",
@@ -18,8 +17,7 @@ module.exports = {
         },
         {
           userID: "A-0002",
-          firstName: "Admin",
-          lastName: "Two",
+          fullName: "Admin",
           email: "admintwo@gmail.com",
           password: "admintwo123",
           userRole: "Admin",
