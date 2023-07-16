@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AddButton,
   ButtonContainer,
@@ -9,58 +9,7 @@ import {
 } from "./style";
 import { CustomForm, FormItem, InputFelid, Label } from "./style";
 import { Col, Row } from "antd";
-import { addEquipment } from "../../actions/EquipmentAction";
-const dataSource = [
-  {
-    key: "1",
-    name: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-  {
-    key: "2",
-    name: "John",
-    age: 42,
-    address: "10 Downing Street",
-  },
-  {
-    key: "1",
-    name: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-  {
-    key: "2",
-    name: "John",
-    age: 42,
-    address: "10 Downing Street",
-  },
-  {
-    key: "1",
-    name: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-  {
-    key: "2",
-    name: "John",
-    age: 42,
-    address: "10 Downing Street",
-  },
-  {
-    key: "1",
-    name: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-  {
-    key: "2",
-    name: "John",
-    age: 42,
-    address: "10 Downing Street",
-  },
-];
-
+import { addEquipment, getEquipment } from "../../actions/EquipmentAction";
 const columns = [
   {
     title: "Name",
@@ -68,19 +17,30 @@ const columns = [
     key: "name",
   },
   {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
+    title: "Total Count",
+    dataIndex: "totalCount",
+    key: "totalCount",
   },
   {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
+    title: "Available Count",
+    dataIndex: "availableCount",
+    key: "availableCount",
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+  },
+  {
+    title: "Actions",
+    dataIndex: "actions",
+    key: "actions",
   },
 ];
 
 const Equipments = () => {
   const [addEquip, setAddEquip] = useState(false);
+  const [equipments, setEquipments] = useState([]);
   const [inputs, setInputs] = useState({
     name: "",
     totalCount: "",
@@ -104,6 +64,15 @@ const Equipments = () => {
   const handleOnChange = (event) => {
     setInputs({ ...inputs, [event.target.name]: event.target.value });
   };
+
+  const handleFetchData = async () => {
+    setEquipments(await getEquipment());
+  };
+
+  useEffect(() => {
+    handleFetchData();
+  }, [addEquip]);
+
   return (
     <Container>
       <ButtonContainer>
@@ -118,7 +87,7 @@ const Equipments = () => {
         )}
       </ButtonContainer>
       {!addEquip ? (
-        <CustomTable dataSource={dataSource} columns={columns} />
+        <CustomTable dataSource={equipments} columns={columns} />
       ) : (
         <FormContainer>
           <CustomForm>

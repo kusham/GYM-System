@@ -9,5 +9,5 @@ background: black;
 `
 
 export const Container = styled.div`
-height: 82vh;
+height: 80vh;
 `

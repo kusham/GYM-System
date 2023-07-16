@@ -6,13 +6,13 @@ export const Container = styled.div`
   align-items: center;
   font-family: NationalBold, Helvetica, Arial, Sans-serif;
   color: white;
-  font-size: 20px;
-  height: 6vh;
+  font-size: 14px;
+  height: 4vh;
   gap: 5px;
 `;
 
 export const SocialIcons = styled.div`
   display: flex;
   gap: 20px;
-  font-size: 25px;
+  font-size: 20px;
 `;

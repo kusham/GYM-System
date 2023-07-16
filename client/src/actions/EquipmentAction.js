@@ -20,3 +20,20 @@ export const addEquipment = async (inputData) => {
     });
   }
 };
+
+export const getEquipment = async () => {
+  try {
+    const { data } = await API.get("/api/equipment/getall");
+    if (data.success) {
+      return data.equipments;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
