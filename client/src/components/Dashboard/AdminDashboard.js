@@ -1,5 +1,11 @@
 import React from 'react'
 import { CustomTab } from './style';
+import Equipments from '../Tabs/Equipments';
+import Trainers from '../Tabs/Trainers';
+import Members from '../Tabs/Members';
+import Member from '../Registration/Member';
+import Trainer from '../Registration/Trainer';
+
 
 const AdminDashboard = () => {
   const onChange = (key) => {
@@ -14,27 +20,27 @@ const AdminDashboard = () => {
     {
       key: '2',
       label: `Members`,
-      children: `Content of Tab Pane 2`,
+      children: <Members />,
     },
     {
       key: '3',
       label: `Trainers`,
-      children: `Content of Tab Pane 3`,
+      children: <Trainers />,
     },
     {
       key: '4',
       label: `Equipments`,
-      children: `Content of Tab Pane 3`,
+      children: <Equipments />,
     },
     {
       key: '5',
       label: `Register Members`,
-      children: `Content of Tab Pane 3`,
+      children: <Member />,
     },
     {
       key: '6',
       label: `Register Trainers`,
-      children: `Content of Tab Pane 3`,
+      children: <Trainer />,
     },
   ];
   
