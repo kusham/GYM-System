@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const User = require("../models/UserModel");
 const generateUserId = require("../Utils/GenerateUserId");
 const { checkPassword, hashPassword } = require("../Utils/HashPassword");
@@ -83,3 +84,49 @@ module.exports.loginUser = async (req, res) => {
 };
 
 
+//-------------------------user update--------------------------
+module.exports.updateUser = async (req, res) => {
+  console.log("Update user");
+  try {
+    const existingEmail = await User.findOne({
+      where: {userID: { [Op.ne]: req.body.userID }, email: req.body.email },
+    });
+    const existingNic = await User.findOne({
+      where: {userID: {  [Op.ne]: req.body.userID }, nic: req.body.nic },
+    });
+    if (existingEmail) {
+      //check existing email
+      return res.status(400).json({
+        success: false,
+        message: "Email Already Exists. Try Different One.",
+      });
+    } else if (existingNic) {
+      //check existing nic
+      return res.status(400).json({
+        success: false,
+        message: "NIC Already Exists. Try Different One.",
+      });
+    }
+    const result = await User.update(req.body, {
+      where: { userID: req.params.userID },
+    });
+
+    if (result[0] == 1) {
+      res.status(200).json({
+        success: true,
+        message: "User updated Successfully.",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: "User update failed.",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "User Registration failed",
+      error: error.message,
+    });
+  }
+};

@@ -14,7 +14,7 @@ module.exports.createWorkout = async (req, res) => {
         message: "workout creation failed. Title is already available.",
       });
     }
-    const savedWorkout = await Workout.save(newWorkout.dataValues);
+    const savedWorkout = await Workout.create(newWorkout.dataValues);
     res.status(200).json({
       success: true,
       message: "workout creation Successfully.",

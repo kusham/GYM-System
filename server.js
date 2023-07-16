@@ -11,7 +11,7 @@ const dbSync = require("./src/config/DatabaseSync");
 // Import routes
 var userRoutes = require("./src/routes/UserRoutes");
 var workoutRoutes = require("./src/routes/WorkoutRoutes");
-var equipmentRoutes = require("./src/routes/UserRoutes");
+var equipmentRoutes = require("./src/routes/EquipmentRoutes");
 
 
 const app = express();

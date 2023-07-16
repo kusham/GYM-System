@@ -6,15 +6,15 @@ module.exports.createEquipment = async (req, res) => {
   try {
     const newEquipment = new Equipment(req.body);
     const existingEquipment = await Equipment.findOne({
-      where: { title: newEquipment.title },
+      where: { name: newEquipment.name },
     });
     if (existingEquipment) {
       return res.status(404).json({
         success: false,
-        message: "Equipment creation failed. Title is already available.",
+        message: "Equipment creation failed. Name is already available.",
       });
     }
-    const savedEquipment = await Equipment.save(newEquipment.dataValues);
+    const savedEquipment = await Equipment.create(newEquipment.dataValues);
     res.status(200).json({
       success: true,
       message: "Equipment creation Successfully.",

@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerUser, loginUser } = require("../controllers/AuthControllers");
+const { registerUser, loginUser, updateUser } = require("../controllers/AuthControllers");
 const {
   getAllUsers,
   getAllMembers,
@@ -29,6 +29,7 @@ router.get("/getInstructorById/:userID", getInstructorById);
 router.get("/getUserCountForRoles", getUserCountForRoles);
 router.get("/getNewRegistrants", getNewRegistrants);
 
+router.put("/updateUser/:userID", updateUser);
 router.put("/assignToInstructor", assignToInstructor);
 
 module.exports = router;
