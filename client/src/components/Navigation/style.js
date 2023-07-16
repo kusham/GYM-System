@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -27,7 +26,7 @@ export const Logo = styled.div`
 export const NavContent = styled.div`
   display: flex;
   justify-content: space-around;
-  width:50%;
+  width: ${props => props.halfwidth === 'true' ? '30%': '50%'}
 `;
 
 export const NavItem = styled.div`

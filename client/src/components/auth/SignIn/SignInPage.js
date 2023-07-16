@@ -4,9 +4,9 @@ import { AuthFooter, AuthTitle, Container } from "../style";
 import { UnlockFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { Form } from "antd";
-import { login } from "../../../actions/auth/AuthActions";
+import { login } from "../../../actions/AuthActions";
 
-const SignInPage = () => {
+const SignInPage = ({setUserLogged}) => {
   const [inputs, setInputs] = useState({
     userID: "",
     password: "",
@@ -17,6 +17,7 @@ const SignInPage = () => {
     login(inputs, navigateToDashBoard)
   };
   const navigateToDashBoard = () => {
+    setUserLogged(true);
     navigate("/dashboard", { replace: true });
   }
 

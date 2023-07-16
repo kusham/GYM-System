@@ -1,8 +1,9 @@
 import React from "react";
 import { Container, Logo, NavContent, NavItem } from "./style";
 import { useNavigate } from "react-router-dom";
+import { userRoles } from "../../resources/UserRoles";
 
-const Navbar = () => {
+const Navbar = ({ user, userRole }) => {
   const navigate = useNavigate();
 
   return (
@@ -10,12 +11,13 @@ const Navbar = () => {
       <Logo>
         Friends & Fitness <span>Sports Club</span>{" "}
       </Logo>
-      <NavContent>
-        <NavItem onClick={() => navigate("/home")}>Home</NavItem>
-        <NavItem>Our Team</NavItem>
-        <NavItem>About Us</NavItem>
-        <NavItem>Contact</NavItem>
-        <NavItem>Contact</NavItem>
+      <NavContent halfwidth = {userRole === userRoles.ADMIN ? "true": undefined}>
+        {!user && <NavItem onClick={() => navigate("/home")}>Home</NavItem>}
+        {user && <NavItem onClick={() => navigate("/dashboard")}>Dashboard</NavItem>}
+
+        {userRole !== userRoles.ADMIN && <NavItem onClick={() => navigate("/ourTeam")}>Our Team</NavItem>}
+        <NavItem onClick={() => navigate("/aboutUs")}>About Us</NavItem>
+        <NavItem onClick={() => navigate("/contactUs")}>Contact</NavItem>
       </NavContent>
     </Container>
   );
