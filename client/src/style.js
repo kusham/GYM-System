@@ -1,0 +1,12 @@
+import styled from 'styled-components'
+import backgroundImage from './resources/images/background.png'
+
+
+export const Root = styled.div`
+ background-image: url(${backgroundImage});
+ height: 100vh;
+`
+
+export const Container = styled.div`
+height: 82vh;
+`
