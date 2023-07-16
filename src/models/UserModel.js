@@ -11,12 +11,9 @@ var User = db.define(
       unique: true,
       primaryKey: true,
     },
-    firstName: {
+    fullName: {
       type: Sequelize.STRING,
       allowNull: false,
-    },
-    lastName: {
-      type: Sequelize.STRING,
     },
     email: {
       type: Sequelize.STRING,
