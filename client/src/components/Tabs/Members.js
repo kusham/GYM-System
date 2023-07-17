@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { AddButton, ButtonContainer, Container, CustomTable, IconWrapper } from "./style";
+import {
+  AddButton,
+  ButtonContainer,
+  Container,
+  CustomTable,
+  IconWrapper,
+} from "./style";
 import { getMembers } from "../../actions/AuthActions";
 import { EditOutlined, EyeFilled } from "@ant-design/icons";
 import MemberEdit from "./Edit/MemberEdit";
 import dayjs from "dayjs";
+import MemberModal from "./Modals/MemberModal";
 const Members = ({ forceRender }) => {
   const columns = [
     {
@@ -32,10 +39,15 @@ const Members = ({ forceRender }) => {
       key: "nic",
     },
     {
-      title: "Birthday",
-      dataIndex: "dob",
+      title: "Trainer",
+      dataIndex: "instructor",
       render: (record) => {
-        return new Date(record).toDateString();
+        if (record) {
+          return record?.fullName
+        } else {
+          
+          return "--";
+        }
       },
     },
     {
@@ -44,7 +56,12 @@ const Members = ({ forceRender }) => {
       render: (text, record) => {
         return (
           <IconWrapper>
-            <EyeFilled style={{ cursor: "pointer" }} />
+            <EyeFilled
+              onClick={() => {
+                handleViewMember(record);
+              }}
+              style={{ cursor: "pointer" }}
+            />
             <EditOutlined
               onClick={() => {
                 handleEditMember(record);
@@ -59,6 +76,7 @@ const Members = ({ forceRender }) => {
   const [members, setMembers] = useState([]);
   const [member, setMember] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleEditMember = (member) => {
     member.dob = dayjs(member.dob);
@@ -66,17 +84,26 @@ const Members = ({ forceRender }) => {
     setMember(member);
     setEditMode(true);
   };
+  const handleViewMember = (member) => {
+    setMember(member);
+    setIsModalOpen(true);
+  };
   const handleFetchData = async () => {
     setMembers(await getMembers());
   };
   useEffect(() => {
     handleFetchData();
-  }, [forceRender, editMode]);
+  }, [forceRender, editMode, isModalOpen]);
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Container>
       {editMode ? (
         <>
-          <ButtonContainer style={{justifyContent: "flex-start"}}>
+          <ButtonContainer style={{ justifyContent: "flex-start" }}>
             <AddButton onClick={() => setEditMode(false)}>BACK</AddButton>
           </ButtonContainer>
           <MemberEdit member={member} setEditMode={setEditMode} />
@@ -84,6 +111,7 @@ const Members = ({ forceRender }) => {
       ) : (
         <CustomTable dataSource={members} columns={columns} />
       )}
+      <MemberModal isModalOpen={isModalOpen} onOk={handleOk} member={member}/>
     </Container>
   );
 };

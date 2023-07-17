@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { AddButton, ButtonContainer, Container, CustomTable, IconWrapper } from "./style";
+import {
+  AddButton,
+  ButtonContainer,
+  Container,
+  CustomTable,
+  IconWrapper,
+} from "./style";
 import { getTrainers } from "../../actions/AuthActions";
 import { EditOutlined, EyeFilled } from "@ant-design/icons";
 import dayjs from "dayjs";
 import TrainerEdit from "./Edit/TrainerEdit";
+import TrainerModal from "./Modals/TrainerModal";
 const Trainers = ({ forceRender }) => {
-  
   const columns = [
     {
       title: "Full Name",
@@ -43,7 +49,12 @@ const Trainers = ({ forceRender }) => {
       render: (text, record) => {
         return (
           <IconWrapper>
-            <EyeFilled style={{ cursor: "pointer" }} />
+            <EyeFilled
+              onClick={() => {
+                handleViewTrainer(record);
+              }}
+              style={{ cursor: "pointer" }}
+            />
             <EditOutlined
               onClick={() => {
                 handleEditTrainer(record);
@@ -58,6 +69,7 @@ const Trainers = ({ forceRender }) => {
   const [trainers, setTrainers] = useState([]);
   const [trainer, setTrainer] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleEditTrainer = (trainer) => {
     trainer.dob = dayjs(trainer.dob);
@@ -67,16 +79,22 @@ const Trainers = ({ forceRender }) => {
   const handleFetchData = async () => {
     setTrainers(await getTrainers());
   };
+  const handleViewTrainer = (trainer) => {
+    setTrainer(trainer);
+    setIsModalOpen(true);
+  };
 
   useEffect(() => {
     handleFetchData();
   }, [forceRender, editMode]);
-
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
   return (
     <Container>
       {editMode ? (
         <>
-          <ButtonContainer style={{justifyContent: "flex-start"}}>
+          <ButtonContainer style={{ justifyContent: "flex-start" }}>
             <AddButton onClick={() => setEditMode(false)}>BACK</AddButton>
           </ButtonContainer>
           <TrainerEdit trainer={trainer} setEditMode={setEditMode} />
@@ -84,6 +102,7 @@ const Trainers = ({ forceRender }) => {
       ) : (
         <CustomTable dataSource={trainers} columns={columns} />
       )}
+      <TrainerModal isModalOpen={isModalOpen} onOk={handleOk} trainer={trainer} />
     </Container>
   );
 };

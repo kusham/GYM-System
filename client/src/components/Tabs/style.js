@@ -30,7 +30,6 @@ export const AddButton = styled(Button)`
   padding: 12px;
 `;
 
-
 export const FormContainer = styled.div`
   display: flex;
   align-items: center;
@@ -55,7 +54,6 @@ export const InputFelid = styled(Input)`
   height: 45px;
   width: 100%;
 `;
-
 
 export const CreateButton = styled(Button)`
   background: #ffa500;
@@ -92,8 +90,8 @@ export const CustomSelect = styled(Select)`
 `;
 
 export const IconWrapper = styled.div`
- display: flex;
- gap: 10px;
+  display: flex;
+  gap: 10px;
 `;
 
 export const CheckBoxes = styled(Checkbox.Group)`
@@ -111,4 +109,31 @@ export const CustomDatePicker = styled(DatePicker)`
   background: #505c55;
   height: 45px;
   width: 100%;
+`;
+
+export const ModalSelectWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+`;
+
+export const CustomModalSelect = styled(Select)`
+  border: 1px solid #ffa500;
+  border-radius: 5px;
+  height: 40px;
+  width: 50%;
+  .ant-select-selector {
+    border: none !important;
+  }
+`;
+
+export const AssignButton = styled(Button)`
+  border: 1px solid #ffa500;
+  border-radius: 5px;
+  height: auto;
+  background: orange;
+  font-size: 15px;
+    font-family: NationalBold, Helvetica, Arial, Sans-serif;
+    font-weight: 600;
 `;

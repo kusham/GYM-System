@@ -106,3 +106,46 @@ export const updateUser = async (userData) => {
     });
   }
 };
+
+
+export const assignTrainer = async (userID, instructorID) => {
+  try {
+    const { data } = await API.put(
+      `/api/user/assignToInstructor`, {userID, instructorID}
+    );
+    if (data.success) {
+      notification.success({
+        message: "Success",
+        description: data?.message,
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const getMemberByID = async (userID) => {
+  try {
+    const { data } = await API.get(
+      `/api/user/getMemberById/${userID}`
+    );
+    if (data.success) {
+      return data?.success?.member;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};

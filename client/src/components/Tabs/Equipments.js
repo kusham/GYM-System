@@ -6,48 +6,79 @@ import {
   CreateButton,
   CustomTable,
   FormContainer,
+  IconWrapper,
 } from "./style";
+import { EditOutlined, EyeFilled } from "@ant-design/icons";
+
 import { CustomForm, FormItem, InputFelid, Label } from "./style";
 import { Col, Row } from "antd";
 import { addEquipment, getEquipment } from "../../actions/EquipmentAction";
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "Total Count",
-    dataIndex: "totalCount",
-    key: "totalCount",
-  },
-  {
-    title: "Available Count",
-    dataIndex: "availableCount",
-    key: "availableCount",
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
-  },
-  {
-    title: "Actions",
-    dataIndex: "actions",
-    key: "actions",
-  },
-];
+import EquipmentModal from "./Modals/EquipmentModal";
 
 const Equipments = () => {
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Total Count",
+      dataIndex: "totalCount",
+      key: "totalCount",
+    },
+    {
+      title: "Available Count",
+      dataIndex: "availableCount",
+      key: "availableCount",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      render: (text, record) => {
+        return (
+          <IconWrapper>
+            <EyeFilled
+              onClick={() => {
+                handleViewEquipment(record);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+            <EditOutlined
+              onClick={() => {
+                handleEditEquipment(record);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </IconWrapper>
+        );
+      },
+    },
+  ];
   const [addEquip, setAddEquip] = useState(false);
   const [equipments, setEquipments] = useState([]);
+  const [equipment, setEquipment] = useState([]);
   const [inputs, setInputs] = useState({
     name: "",
     totalCount: "",
     availableCount: "",
     description: "",
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleEditEquipment = (equipment) => {
+
+  };
+
+  const handleViewEquipment = (equipment) => {
+    setEquipment(equipment);
+    setIsModalOpen(true);
+  };
   const handleCreate = () => {
     addEquipment(inputs);
     clearForm();
@@ -72,7 +103,10 @@ const Equipments = () => {
   useEffect(() => {
     handleFetchData();
   }, [addEquip]);
-
+  
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
   return (
     <Container>
       <ButtonContainer>
@@ -146,6 +180,7 @@ const Equipments = () => {
           </CustomForm>
         </FormContainer>
       )}
+      <EquipmentModal isModalOpen={isModalOpen} onOk={handleOk} equipment={equipment} />
     </Container>
   );
 };

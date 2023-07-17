@@ -7,46 +7,67 @@ import {
   CustomSelect,
   CustomTable,
   FormContainer,
+  IconWrapper,
 } from "./style";
+import { EditOutlined, EyeFilled } from "@ant-design/icons";
+
 import { CustomForm, FormItem, InputFelid, Label } from "./style";
 import { Col, Row } from "antd";
 import { addWorkouts, getWorkouts } from "../../actions/WorkoutAction";
-
-const columns = [
-  {
-    title: "Title",
-    dataIndex: "title",
-    key: "title",
-  },
-  {
-    title: "Main Goal",
-    dataIndex: "mainGoal",
-    key: "mainGoal",
-  },
-  {
-    title: "Training Level",
-    dataIndex: "trainingLevel",
-    key: "trainingLevel",
-  },
-  {
-    title: "Type",
-    dataIndex: "type",
-    key: "type",
-  },
-  {
-    title: "Duration",
-    dataIndex: "duration",
-    key: "duration",
-  },
-  {
-    title: "Actions",
-    dataIndex: "actions",
-    key: "actions",
-  },
-];
+import WorkoutModal from "./Modals/WorkoutModal";
 const Workouts = () => {
+  const columns = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Main Goal",
+      dataIndex: "mainGoal",
+      key: "mainGoal",
+    },
+    {
+      title: "Training Level",
+      dataIndex: "trainingLevel",
+      key: "trainingLevel",
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+    },
+    {
+      title: "Duration",
+      dataIndex: "duration",
+      key: "duration",
+    },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      render: (text, record) => {
+        return (
+          <IconWrapper>
+            <EyeFilled
+              onClick={() => {
+                handleViewWorkout(record);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+            <EditOutlined
+              onClick={() => {
+                handleEditWorkout(record);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </IconWrapper>
+        );
+      },
+    },
+  ];
   const [addWorkout, setAddWorkout] = useState(false);
-  const [workouts, setWorkout] = useState([]);
+  const [workouts, setWorkouts] = useState([]);
+  const [workout, setWorkout] = useState([]);
   const [inputs, setInputs] = useState({
     title: "",
     mainGoal: "",
@@ -56,6 +77,14 @@ const Workouts = () => {
     targetGender: "male",
     description: "",
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleEditWorkout = (Workout) => {};
+
+  const handleViewWorkout = (workout) => {
+    setWorkout(workout);
+    setIsModalOpen(true);
+  };
 
   const handleCreate = () => {
     addWorkouts(inputs);
@@ -78,12 +107,16 @@ const Workouts = () => {
   };
 
   const handleFetchData = async () => {
-    setWorkout(await getWorkouts());
+    setWorkouts(await getWorkouts());
   };
 
   useEffect(() => {
     handleFetchData();
   }, [addWorkout]);
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
   return (
     <Container>
       <ButtonContainer>
@@ -144,7 +177,7 @@ const Workouts = () => {
                       { value: "female", label: "Female" },
                       { value: "both", label: "Both" },
                     ]}
-                    defaultValue='male'
+                    defaultValue="male"
                     onChange={(value) => {
                       setInputs({ ...inputs, targetGender: value });
                     }}
@@ -165,13 +198,13 @@ const Workouts = () => {
               <Col xs={24} sm={24} md={12} lg={8} xl={8}>
                 <FormItem>
                   <Label>Training Level</Label>
-                   <CustomSelect
+                  <CustomSelect
                     options={[
                       { value: "easy", label: "Easy" },
                       { value: "medium", label: "Medium" },
                       { value: "hard", label: "Hard" },
                     ]}
-                    defaultValue='easy'
+                    defaultValue="easy"
                     onChange={(value) => {
                       setInputs({ ...inputs, trainingLevel: value });
                     }}
@@ -204,6 +237,8 @@ const Workouts = () => {
           </CustomForm>
         </FormContainer>
       )}
+      <WorkoutModal isModalOpen={isModalOpen} onOk={handleOk} workout={workout} />
+
     </Container>
   );
 };
