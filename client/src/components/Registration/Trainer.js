@@ -13,7 +13,7 @@ import {
 import { registerUsers } from "../../actions/RegistrationActions";
 import { userRoles } from "../../resources/UserRoles";
 
-const Trainer = () => {
+const Trainer = ({ setForceRender }) => {
   const [inputs, setInputs] = useState({
     fullName: "",
     email: "",
@@ -22,11 +22,13 @@ const Trainer = () => {
     gender: "male",
     mobile: "",
     password: "",
-    specialty: "",
+    branch: "hikkaduwa",
+    specialty: "Weight Loss",
   });
   const handleRegister = () => {
     registerUsers(inputs, userRoles.INSTRUCTOR);
     clearForm();
+    setForceRender((prev) => !prev);
   };
   const clearForm = () => {
     setInputs({
@@ -37,7 +39,8 @@ const Trainer = () => {
       gender: "male",
       mobile: "",
       password: "",
-      specialty: "",
+      branch: "hikkaduwa",
+      specialty: "Weight Loss",
     });
   };
   const handleOnChange = (event) => {
@@ -77,7 +80,7 @@ const Trainer = () => {
                 options={[
                   { value: "male", label: "Male" },
                   { value: "female", label: "Female" },
-                  { value: "other", label: "Other" },
+                  { value: "not to reveal", label: "Not to Reveal" },
                 ]}
                 onChange={(value) => {
                   setInputs({ ...inputs, gender: value });
@@ -89,7 +92,7 @@ const Trainer = () => {
         </Row>
 
         <Row gutter={24}>
-        <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+          <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <FormItem>
               <Label>NIC</Label>
               <InputFelid
@@ -124,10 +127,35 @@ const Trainer = () => {
         <Row gutter={24}>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <FormItem>
+              <Label>Branch</Label>
+              <CustomSelect
+                defaultValue={"hikkaduwa"}
+                options={[
+                  { value: "hikkaduwa", label: "Hikkaduwa" },
+                  { value: "unawatuna", label: "Unawatuna" },
+                ]}
+                onChange={(value) => {
+                  setInputs({ ...inputs, branch: value });
+                }}
+                value={inputs.branch}
+              />
+            </FormItem>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+            <FormItem>
               <Label>Specialty</Label>
-              <InputFelid
-                name="specialty"
-                onChange={handleOnChange}
+              <CustomSelect
+                options={[
+                  { label: "Weight Loss", value: "Weight Loss" },
+                  { label: "Muscle Building", value: "Muscle Building" },
+                  {
+                    label: "Athletic Performance",
+                    value: "Athletic Performance",
+                  },
+                ]}
+                onChange={(value) => {
+                  setInputs({ ...inputs, specialty: value });
+                }}
                 value={inputs.specialty}
               />
             </FormItem>
@@ -145,7 +173,11 @@ const Trainer = () => {
         </Row>
 
         <FormItem style={{ alignItems: "center" }}>
-          <RegisterButton type="primary" htmlType="submit" onClick={handleRegister}>
+          <RegisterButton
+            type="primary"
+            htmlType="submit"
+            onClick={handleRegister}
+          >
             SUBMIT
           </RegisterButton>
         </FormItem>

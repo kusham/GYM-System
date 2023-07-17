@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AddButton,
   ButtonContainer,
@@ -6,88 +6,79 @@ import {
   CreateButton,
   CustomTable,
   FormContainer,
+  IconWrapper,
 } from "./style";
+import { EditOutlined, EyeFilled } from "@ant-design/icons";
+
 import { CustomForm, FormItem, InputFelid, Label } from "./style";
 import { Col, Row } from "antd";
-import { addEquipment } from "../../actions/EquipmentAction";
-const dataSource = [
-  {
-    key: "1",
-    name: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-  {
-    key: "2",
-    name: "John",
-    age: 42,
-    address: "10 Downing Street",
-  },
-  {
-    key: "1",
-    name: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-  {
-    key: "2",
-    name: "John",
-    age: 42,
-    address: "10 Downing Street",
-  },
-  {
-    key: "1",
-    name: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-  {
-    key: "2",
-    name: "John",
-    age: 42,
-    address: "10 Downing Street",
-  },
-  {
-    key: "1",
-    name: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-  {
-    key: "2",
-    name: "John",
-    age: 42,
-    address: "10 Downing Street",
-  },
-];
-
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-];
+import { addEquipment, getEquipment } from "../../actions/EquipmentAction";
+import EquipmentModal from "./Modals/EquipmentModal";
 
 const Equipments = () => {
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Total Count",
+      dataIndex: "totalCount",
+      key: "totalCount",
+    },
+    {
+      title: "Available Count",
+      dataIndex: "availableCount",
+      key: "availableCount",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      render: (text, record) => {
+        return (
+          <IconWrapper>
+            <EyeFilled
+              onClick={() => {
+                handleViewEquipment(record);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+            <EditOutlined
+              onClick={() => {
+                handleEditEquipment(record);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </IconWrapper>
+        );
+      },
+    },
+  ];
   const [addEquip, setAddEquip] = useState(false);
+  const [equipments, setEquipments] = useState([]);
+  const [equipment, setEquipment] = useState([]);
   const [inputs, setInputs] = useState({
     name: "",
     totalCount: "",
     availableCount: "",
     description: "",
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleEditEquipment = (equipment) => {
+
+  };
+
+  const handleViewEquipment = (equipment) => {
+    setEquipment(equipment);
+    setIsModalOpen(true);
+  };
   const handleCreate = () => {
     addEquipment(inputs);
     clearForm();
@@ -104,6 +95,18 @@ const Equipments = () => {
   const handleOnChange = (event) => {
     setInputs({ ...inputs, [event.target.name]: event.target.value });
   };
+
+  const handleFetchData = async () => {
+    setEquipments(await getEquipment());
+  };
+
+  useEffect(() => {
+    handleFetchData();
+  }, [addEquip]);
+  
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
   return (
     <Container>
       <ButtonContainer>
@@ -118,7 +121,7 @@ const Equipments = () => {
         )}
       </ButtonContainer>
       {!addEquip ? (
-        <CustomTable dataSource={dataSource} columns={columns} />
+        <CustomTable dataSource={equipments} columns={columns} />
       ) : (
         <FormContainer>
           <CustomForm>
@@ -177,6 +180,7 @@ const Equipments = () => {
           </CustomForm>
         </FormContainer>
       )}
+      <EquipmentModal isModalOpen={isModalOpen} onOk={handleOk} equipment={equipment} />
     </Container>
   );
 };

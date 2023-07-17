@@ -46,3 +46,106 @@ export const signUp = async (userData, navigateToLogin) => {
     });
   }
 };
+
+export const getTrainers = async () => {
+  try {
+    const { data } = await API.get("/api/user/getallInstructors");
+    if (data.success) {
+      return data.users;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const getMembers = async () => {
+  try {
+    const { data } = await API.get("/api/user/getallMembers");
+    if (data.success) {
+      return data.users;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const updateUser = async (userData) => {
+  try {
+    userData.dob = userData?.dob?.toString();
+    userData.purpose = userData?.purpose?.join(", ");
+    const { data } = await API.put(
+      `/api/user/updateUser/${userData.userID}`,
+      userData
+    );
+    if (data.success) {
+      notification.success({
+        message: "Success",
+        description: data?.message,
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+
+export const assignTrainer = async (userID, instructorID) => {
+  try {
+    const { data } = await API.put(
+      `/api/user/assignToInstructor`, {userID, instructorID}
+    );
+    if (data.success) {
+      notification.success({
+        message: "Success",
+        description: data?.message,
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const getMemberByID = async (userID) => {
+  try {
+    const { data } = await API.get(
+      `/api/user/getMemberById/${userID}`
+    );
+    if (data.success) {
+      return data?.success?.member;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};

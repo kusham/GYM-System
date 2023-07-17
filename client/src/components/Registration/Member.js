@@ -13,6 +13,7 @@ import {
 } from "./style";
 import { registerUsers } from "../../actions/RegistrationActions";
 import { userRoles } from "../../resources/UserRoles";
+import dayjs from "dayjs";
 
 const preferenceOptions = [
   { label: "Weight Loss", value: "Weight Loss" },
@@ -20,12 +21,12 @@ const preferenceOptions = [
   { label: "Athletic Performance", value: "Athletic Performance" },
 ];
 
-const Member = () => {
+const Member = ({setForceRender}) => {
   const [inputs, setInputs] = useState({
     fullName: "",
     email: "",
     nic: "",
-    dob: "",
+    dob: dayjs(new Date()),
     gender: "male",
     mobile: "",
     password: "",
@@ -38,6 +39,7 @@ const Member = () => {
   const handleRegister = () => {
     registerUsers(inputs, userRoles.MEMBER);
     clearForm();
+    setForceRender((prev) => !prev);
   };
   const clearForm = () => {
     setInputs({
@@ -92,7 +94,7 @@ const Member = () => {
                 options={[
                   { value: "male", label: "Male" },
                   { value: "female", label: "Female" },
-                  { value: "other", label: "Other" },
+                  { value: "not to reveal", label: "Not to Reveal" },
                 ]}
                 onChange={(value) => {
                   setInputs({ ...inputs, gender: value });
@@ -109,8 +111,8 @@ const Member = () => {
               <Label>Preferred Branch</Label>
               <CustomSelect
                 options={[
-                  { value: "hikkaduwa", label: "Hikaduwa" },
-                  { value: "galle", label: "Galle" },
+                  { value: "hikkaduwa", label: "Hikkaduwa" },
+                  { value: "unawatuna", label: "Unawatuna" },
                 ]}
                 onChange={(value) => {
                   setInputs({ ...inputs, branch: value });

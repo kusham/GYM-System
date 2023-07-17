@@ -1,58 +1,33 @@
 import React, { useState } from "react";
-import { Container } from "../style";
 import { Row, Col } from "antd";
 import {
-  CheckBoxes,
   CustomDatePicker,
   CustomForm,
   CustomSelect,
   FormItem,
   InputFelid,
   Label,
-  SignUpButton,
-  SingleCheckBox,
-} from "./style";
-import { useNavigate } from "react-router-dom";
-import { signUp } from "../../../actions/AuthActions";
-import dayjs from "dayjs";
-
-const preferenceOptions = [
-  { label: "Weight Loss", value: "Weight Loss" },
-  { label: "Muscle Building", value: "Muscle Building" },
-  { label: "Athletic Performance", value: "Athletic Performance" },
-];
-
-const SignupPage = () => {
-  const [inputs, setInputs] = useState({
-    fullName: "",
-    email: "",
-    nic: "",
-    dob: dayjs(new Date()),
-    gender: "male",
-    mobile: "",
-    password: "",
-    branch: "hikkaduwa",
-    purpose: [],
-    agree: false,
-  });
-  const navigate = useNavigate();
-  const handleSignIn = () => {
-    console.log(inputs);
-    signUp(inputs, navigateToDashBoard);
-  };
-  const navigateToDashBoard = () => {
-    navigate("/auth/login", { replace: true });
-  };
-  const handleOnChange = (event) => {
-    console.log(event.target);
-    setInputs({ ...inputs, [event.target.name]: event.target.value });
-  };
-  const handleOnChangeDatePicker = (date) => {
-    setInputs({ ...inputs, dob: date });
-  };
+  CreateButton,
+  EditContainer,
+} from "../style";
+import { updateUser } from "../../../actions/AuthActions";
+const TrainerEdit = ({ trainer, setEditMode }) => {
+    const [inputs, setInputs] = useState(trainer);
+    const handleUpdate = async () => {
+      const res = await updateUser(inputs);
+      if(res) {
+        setEditMode(false)
+      }
+    };
+    const handleOnChange = (event) => {
+      setInputs({ ...inputs, [event.target.name]: event.target.value });
+    };
+    const handleOnChangeDatePicker = (date) => {
+      setInputs({ ...inputs, dob: date });
+    };
   return (
-    <Container>
-      <CustomForm onFinish={handleSignIn}>
+    <EditContainer>
+      <CustomForm>
         <Row gutter={24}>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <FormItem>
@@ -143,55 +118,58 @@ const SignupPage = () => {
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <FormItem>
-              <Label>Password</Label>
+              <Label>Other Info</Label>
               <InputFelid
-                name="password"
+                name="otherInfo"
                 onChange={handleOnChange}
-                value={inputs.password}
+                value={inputs.otherInfo}
               />
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <FormItem>
-              <Label>Preference</Label>
-              <CheckBoxes
-                value={inputs.purpose}
-                options={preferenceOptions}
-                onChange={(value) => setInputs({ ...inputs, purpose: value })}
+              <Label>Specialty</Label>
+              <CustomSelect
+                options={[
+                  { label: "Weight Loss", value: "Weight Loss" },
+                  { label: "Muscle Building", value: "Muscle Building" },
+                  {
+                    label: "Athletic Performance",
+                    value: "Athletic Performance",
+                  },
+                ]}
+                onChange={(value) => {
+                    setInputs({ ...inputs, specialty: value });
+                  }}
+                value={inputs.specialty}
               />
             </FormItem>
           </Col>
         </Row>
-        <Row>
-          <SingleCheckBox
-            name="agree"
-            onChange={(value) =>
-              setInputs({ ...inputs, agree: value.target.checked })
-            }
-            value={inputs.agree}
-          >
-            I, agree to the terms and conditions of the gym membership and
-            acknowledge that I have provided accurate and complete personal and
-            health information. I understand that the gym is not liable for any
-            injuries or accidents that may occur while using the facilities and
-            that it is my responsibility to use the equipment and facilities
-            safely and in accordance with the gym's rules and regulations.
-          </SingleCheckBox>
+
+        <Row gutter={24}>
+          
+          <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+            <FormItem>
+              <Label>City</Label>
+              <InputFelid
+                name="city"
+                onChange={handleOnChange}
+                value={inputs.city}
+              />
+            </FormItem>
+          </Col>
+          
         </Row>
 
         <FormItem style={{ alignItems: "center" }}>
-          <SignUpButton
-            disabled={!inputs.agree}
-            type="primary"
-            htmlType="submit"
-            onClick={handleSignIn}
-          >
+          <CreateButton type="primary" htmlType="submit" onClick={handleUpdate}>
             SUBMIT
-          </SignUpButton>
+          </CreateButton>
         </FormItem>
       </CustomForm>
-    </Container>
-  );
-};
+    </EditContainer>
+  )
+}
 
-export default SignupPage;
+export default TrainerEdit
