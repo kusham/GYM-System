@@ -9,6 +9,7 @@ const EquipmentModal = ({ isModalOpen, onOk, equipment }) => {
       open={isModalOpen}
       onOk={onOk}
       width={800}
+      onCancel={onOk}
     >
       <Descriptions title={equipment?.name}>
         <Descriptions.Item label="Total Count">

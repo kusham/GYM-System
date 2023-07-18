@@ -37,3 +37,46 @@ export const getEquipment = async () => {
     });
   }
 };
+
+export const updateEquipment = async (equipment) => {
+  try {
+    const { data } = await API.put(
+      `/api/equipment/update/${equipment.id}`,
+      equipment
+    );
+    if (data.success) {
+      notification.success({
+        message: "Success",
+        description: data?.message,
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+
+
+export const getAvailableEquipment = async () => {
+  try {
+    const { data } = await API.get("/api/equipment/available/getall");
+    if (data.success) {
+      return data.equipments;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};

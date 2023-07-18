@@ -14,8 +14,6 @@ const Navbar = ({ user, userRole }) => {
       <NavContent halfwidth = {userRole === userRoles.ADMIN ? "true": undefined}>
         {!user && <NavItem onClick={() => navigate("/home")}>Home</NavItem>}
         {user && <NavItem onClick={() => navigate("/dashboard")}>Dashboard</NavItem>}
-
-        {userRole !== userRoles.ADMIN && <NavItem onClick={() => navigate("/ourTeam")}>Our Team</NavItem>}
         <NavItem onClick={() => navigate("/aboutUs")}>About Us</NavItem>
         <NavItem onClick={() => navigate("/contactUs")}>Contact</NavItem>
       </NavContent>

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  height: 12vh;
+  height: 9vh;
   background-color: black;
   opacity: 0.89;
   display: flex;

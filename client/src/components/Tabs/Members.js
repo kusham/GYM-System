@@ -6,12 +6,17 @@ import {
   CustomTable,
   IconWrapper,
 } from "./style";
-import { getMembers } from "../../actions/AuthActions";
+import {
+  getMembers,
+  getMembersAssignToTrainer,
+} from "../../actions/AuthActions";
 import { EditOutlined, EyeFilled } from "@ant-design/icons";
 import MemberEdit from "./Edit/MemberEdit";
 import dayjs from "dayjs";
 import MemberModal from "./Modals/MemberModal";
-const Members = ({ forceRender }) => {
+import { userRoles } from "../../resources/UserRoles";
+const Members = ({ forceRender, trainerMode }) => {
+  const user = JSON.parse(sessionStorage.getItem("profile"));
   const columns = [
     {
       title: "Full Name",
@@ -43,9 +48,8 @@ const Members = ({ forceRender }) => {
       dataIndex: "instructor",
       render: (record) => {
         if (record) {
-          return record?.fullName
+          return record?.fullName;
         } else {
-          
           return "--";
         }
       },
@@ -62,12 +66,12 @@ const Members = ({ forceRender }) => {
               }}
               style={{ cursor: "pointer" }}
             />
-            <EditOutlined
+            {userRoles.ADMIN === user?.userRole && <EditOutlined
               onClick={() => {
                 handleEditMember(record);
               }}
               style={{ cursor: "pointer" }}
-            />
+            />}
           </IconWrapper>
         );
       },
@@ -92,13 +96,19 @@ const Members = ({ forceRender }) => {
     setMembers(await getMembers());
   };
   useEffect(() => {
-    handleFetchData();
-  }, [forceRender, editMode, isModalOpen]);
+    if (!trainerMode) handleFetchData();
+  }, [forceRender, editMode, isModalOpen, trainerMode]);
 
   const handleOk = () => {
     setIsModalOpen(false);
   };
 
+  const handleFetchData2 = async () => {
+    setMembers(await getMembersAssignToTrainer());
+  };
+  useEffect(() => {
+    if (trainerMode) handleFetchData2();
+  }, [isModalOpen, trainerMode, forceRender]);
   return (
     <Container>
       {editMode ? (
@@ -111,7 +121,7 @@ const Members = ({ forceRender }) => {
       ) : (
         <CustomTable dataSource={members} columns={columns} />
       )}
-      <MemberModal isModalOpen={isModalOpen} onOk={handleOk} member={member}/>
+      <MemberModal isModalOpen={isModalOpen} onOk={handleOk} member={member} trainerMode={trainerMode}/>
     </Container>
   );
 };

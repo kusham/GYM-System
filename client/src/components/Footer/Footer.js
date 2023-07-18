@@ -1,11 +1,6 @@
 import React from "react";
 import { Container, SocialIcons } from "./style";
-import {
-  FacebookFilled,
-  InstagramFilled,
-  TwitterSquareFilled,
-} from "@ant-design/icons";
-
+import { FacebookFilled } from "@ant-design/icons";
 const Footer = () => {
   return (
     <Container>
@@ -13,9 +8,9 @@ const Footer = () => {
         Friends & Fitness Sports Club ©2023 Created by Friends & Fitness
       </span>
       <SocialIcons>
-        <FacebookFilled />
-        <InstagramFilled />
-        <TwitterSquareFilled />
+        <a href="https://www.facebook.com/friendsandfitnesssportsclub">
+          <FacebookFilled />
+        </a>
       </SocialIcons>
     </Container>
   );

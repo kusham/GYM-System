@@ -1,5 +1,6 @@
 import { notification } from "antd";
 import axios from "axios";
+import dayjs from "dayjs";
 
 const API = axios.create({ baseURL: "http://localhost:5000" });
 
@@ -8,6 +9,7 @@ export const login = async (credentials, navigateToDashBoard) => {
     const { data } = await API.post("/api/user/login", credentials);
     if (data.success) {
       sessionStorage.setItem("user", JSON.stringify(data?.user?.userID));
+      sessionStorage.setItem("profile", JSON.stringify(data?.user));
       sessionStorage.setItem("userRole", JSON.stringify(data?.user?.userRole));
       notification.success({
         message: "Success",
@@ -81,10 +83,28 @@ export const getMembers = async () => {
   }
 };
 
+
+export const getMembersAssignToTrainer = async () => {
+  try {
+    const id = JSON.parse(sessionStorage.getItem("user"));
+    const { data } = await API.get(`/api/user/getMembersAssignToInstructor/${id}`);
+    if (data.success) {
+      return data.members;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
 export const updateUser = async (userData) => {
   try {
-    userData.dob = userData?.dob?.toString();
-    userData.purpose = userData?.purpose?.join(", ");
+    // userData.purpose = userData?.purpose?.join(", ");
     const { data } = await API.put(
       `/api/user/updateUser/${userData.userID}`,
       userData
@@ -137,7 +157,64 @@ export const getMemberByID = async (userID) => {
       `/api/user/getMemberById/${userID}`
     );
     if (data.success) {
-      return data?.success?.member;
+      return data?.member;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const getTrainerByID = async (userID) => {
+  try {
+    const { data } = await API.get(
+      `/api/user/getInstructorById/${userID}`
+    );
+    if (data.success) {
+      return data?.instructor;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const getUserCountForRoles = async () => {
+  try {
+    const { data } = await API.get(
+      `/api/user/getUserCountForRoles`
+    );
+    if (data.success) {
+      return data?.count;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const getNewRegistrants = async () => {
+  try {
+    const { data } = await API.get(
+      `/api/user/getNewRegistrants`
+    );
+    if (data.success) {
+      return data?.members;
     } else {
       return null;
     }

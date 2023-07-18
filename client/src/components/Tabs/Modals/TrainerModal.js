@@ -1,4 +1,4 @@
-import { Descriptions, Modal } from "antd";
+import { Avatar, Descriptions, List, Modal } from "antd";
 import React from "react";
 
 const TrainerModal = ({ isModalOpen, onOk, trainer }) => {
@@ -9,6 +9,7 @@ const TrainerModal = ({ isModalOpen, onOk, trainer }) => {
       open={isModalOpen}
       onOk={onOk}
       width={800}
+      onCancel={onOk}
     >
       <Descriptions title={trainer?.fullName}>
         <Descriptions.Item label="UserID">{trainer?.userID}</Descriptions.Item>
@@ -41,7 +42,32 @@ const TrainerModal = ({ isModalOpen, onOk, trainer }) => {
         <Descriptions.Item label="Personal Info">
           {trainer?.personalInfo ? trainer?.personalInfo : "--"}
         </Descriptions.Item>
+        <Descriptions.Item label="Members">
+            {trainer?.members?.length === 0 && '--'}
+        </Descriptions.Item>
       </Descriptions>
+      {trainer?.members &&
+        (trainer?.members?.length > 0 ? (
+          <List
+            itemLayout="horizontal"
+            dataSource={trainer?.members}
+            renderItem={(item, index) => (
+              <List.Item>
+                <List.Item.Meta
+                  avatar={
+                    <Avatar
+                      src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`}
+                    />
+                  }
+                  title={item.fullName}
+                  description={item.userID}
+                />
+              </List.Item>
+            )}
+          />
+        ) : (
+          <></>
+        ))}
     </Modal>
   );
 };

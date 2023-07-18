@@ -46,7 +46,7 @@ const Member = ({setForceRender}) => {
       fullName: "",
       email: "",
       nic: "",
-      dob: "",
+      dob: dayjs(new Date()),
       gender: "male",
       mobile: "",
       password: "",

@@ -9,6 +9,7 @@ const WorkoutModal = ({ isModalOpen, onOk, workout }) => {
       open={isModalOpen}
       onOk={onOk}
       width={800}
+      onCancel={onOk}
     >
       <Descriptions title={workout?.title}>
         <Descriptions.Item label="Main Goal">
