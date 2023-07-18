@@ -18,8 +18,6 @@ function App() {
 
 
   // Retrieve user from session storage
-  console.log(user);
-  console.log(user);
   useEffect(() => {
     setUser(JSON.parse(sessionStorage.getItem("user")));
     setUserRole(JSON.parse(sessionStorage.getItem("userRole")))

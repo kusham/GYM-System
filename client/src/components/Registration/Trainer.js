@@ -12,13 +12,14 @@ import {
 } from "./style";
 import { registerUsers } from "../../actions/RegistrationActions";
 import { userRoles } from "../../resources/UserRoles";
+import dayjs from "dayjs";
 
 const Trainer = ({ setForceRender }) => {
   const [inputs, setInputs] = useState({
     fullName: "",
     email: "",
     nic: "",
-    dob: "",
+    dob: dayjs(new Date()),
     gender: "male",
     mobile: "",
     password: "",

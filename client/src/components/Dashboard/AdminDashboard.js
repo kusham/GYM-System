@@ -6,18 +6,20 @@ import Members from '../Tabs/Members';
 import Member from '../Registration/Member';
 import Trainer from '../Registration/Trainer';
 import Workouts from '../Tabs/Workouts';
+import Summary from '../Tabs/Summary';
 
 
 const AdminDashboard = () => {
   const [forceRender, setForceRender] = useState(false);
   const onChange = (key) => {
     console.log(key);
+    setForceRender(!forceRender);
   };
   const items = [
     {
       key: '1',
       label: `Summary`,
-      children: `Content of Tab Pane 1`,
+      children: <Summary forceRender={forceRender}/>
     },
     {
       key: '2',

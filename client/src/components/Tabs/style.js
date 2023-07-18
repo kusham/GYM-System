@@ -55,6 +55,14 @@ export const InputFelid = styled(Input)`
   width: 100%;
 `;
 
+export const InputFelidModel = styled(Input)`
+  border: 1px solid #ffa500;
+  border-radius: 5;
+  background: white;
+  height: 45px;
+  width: 100%;
+`;
+
 export const CreateButton = styled(Button)`
   background: #ffa500;
   border: none;
@@ -74,6 +82,18 @@ export const FormItem = styled.div`
 export const Label = styled.p`
   color: #e4e4e4;
   font-size: 20px;
+  font-family: NationalBold, Helvetica, Arial, Sans-serif;
+`;
+export const LabelModal = styled.p`
+  color: black;
+  font-size: 12px;
+  font-family: NationalBold, Helvetica, Arial, Sans-serif;
+`;
+
+export const AssignTitle = styled.p`
+  color: black;
+  font-size: 17px;
+  font-weight: 600;
   font-family: NationalBold, Helvetica, Arial, Sans-serif;
 `;
 
@@ -134,6 +154,49 @@ export const AssignButton = styled(Button)`
   height: auto;
   background: orange;
   font-size: 15px;
-    font-family: NationalBold, Helvetica, Arial, Sans-serif;
-    font-weight: 600;
+  font-family: NationalBold, Helvetica, Arial, Sans-serif;
+  font-weight: 600;
+`;
+export const CardContainer = styled.div`
+  display: flex;
+  // flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+`;
+export const CardContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 40px;
+  color: orange;
+  font-weight: 700;
+`;
+export const RateContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+export const RateTitle = styled.p`
+  color: white;
+  font-size: 20px;
+`;
+
+export const Circle = styled.div`
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background-color: orange;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  font-weight: bold;
+`;
+
+export const MarkingContainer = styled.div`
+`;
+export const MakingTitle = styled.div`
+font-weight: 600;
 `;

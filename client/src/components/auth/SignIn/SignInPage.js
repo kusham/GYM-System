@@ -8,7 +8,7 @@ import { login } from "../../../actions/AuthActions";
 
 const SignInPage = ({setUserLogged}) => {
   const [inputs, setInputs] = useState({
-    userID: "",
+    email: "",
     password: "",
   });
   const navigate = useNavigate();
@@ -33,10 +33,10 @@ const SignInPage = ({setUserLogged}) => {
           </AuthTitle>
 
           <InputFelid
-            name="userID"
+            name="email"
             onChange={handleOnChange}
-            placeholder="UserID"
-            value={inputs.userID}
+            placeholder="Email"
+            value={inputs.email}
           />
           <InputFelid
             name="password"

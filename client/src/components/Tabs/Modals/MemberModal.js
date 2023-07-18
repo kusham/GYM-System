@@ -1,17 +1,52 @@
-import { Descriptions, Modal, Select } from "antd";
+import { Col, Descriptions, Modal, Row, Select } from "antd";
 import React, { useEffect, useState } from "react";
-import { AssignButton, CustomModalSelect, ModalSelectWrapper } from "../style";
 import {
-  assignTrainer,
-  getTrainers,
-} from "../../../actions/AuthActions";
+  AssignButton,
+  AssignTitle,
+  CustomModalSelect,
+  FormItem,
+  InputFelidModel,
+  LabelModal,
+  ModalSelectWrapper,
+} from "../style";
+import { assignTrainer, getTrainers } from "../../../actions/AuthActions";
+import { getWorkouts } from "../../../actions/WorkoutAction";
+import { getAvailableEquipment } from "../../../actions/EquipmentAction";
+import { addWorkoutEvents } from "../../../actions/WorkoutEventAction";
+import { userRoles } from "../../../resources/UserRoles";
 
-const MemberModal = ({ isModalOpen, onOk, member }) => {
+const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
   const [instructors, setInstructors] = useState([]);
+  const [workouts, setWorkouts] = useState([]);
+  const [equipments, setEquipments] = useState([]);
+
   const [inputValue, setInputValue] = useState(null);
+
+  const [inputs, setInputs] = useState({
+    memberId: "",
+    trainerId: JSON.parse(sessionStorage.getItem("user")),
+    workoutId: "",
+    equipmentId: "",
+    numberOfSessions: "",
+    description: "",
+  });
+
+  const clearInputs = () => {
+    setInputs({
+      memberId: "",
+      trainerId: JSON.parse(sessionStorage.getItem("user")),
+      workoutId: "",
+      equipmentId: "",
+      numberOfSessions: "",
+      description: "",
+    });
+  };
+  const user = JSON.parse(sessionStorage.getItem("profile"));
 
   const fetchData = async () => {
     setInstructors(await getTrainers());
+    setWorkouts(await getWorkouts());
+    setEquipments(await getAvailableEquipment());
   };
   const handleAssign = async () => {
     const res = await assignTrainer(member?.userID, inputValue);
@@ -22,14 +57,31 @@ const MemberModal = ({ isModalOpen, onOk, member }) => {
   useEffect(() => {
     fetchData();
   }, []);
+  const handleOnChange = (event) => {
+    setInputs({ ...inputs, [event.target.name]: event.target.value });
+  };
+  console.log(member);
+  const handleWorkOutEventAssign = async () => {
+    const res = await addWorkoutEvents(member?.userID, inputs);
+    if (res) {
+      clearInputs();
+    }
+  };
 
   return (
     <Modal
       title="Member Details"
       cancelButtonProps={{ style: { display: "none" } }}
       open={isModalOpen}
-      onOk={onOk}
+      onOk={() => {
+        onOk();
+        clearInputs();
+      }}
       width={800}
+      onCancel={() => {
+        onOk();
+        clearInputs();
+      }}
     >
       <Descriptions title={member?.fullName}>
         <Descriptions.Item label="UserID">{member?.userID}</Descriptions.Item>
@@ -69,24 +121,104 @@ const MemberModal = ({ isModalOpen, onOk, member }) => {
           {member?.personalInfo ? member?.personalInfo : "--"}
         </Descriptions.Item>
       </Descriptions>
-      <ModalSelectWrapper>
-        <CustomModalSelect
-          placeholder="Assign Trainer"
-          value={inputValue}
-          onChange={(value) => {
-            setInputValue(value);
-          }}
-        >
-          {instructors?.map((item) => (
-            <Select.Option key={item.userID} value={item.userID}>
-              {item.fullName}
-            </Select.Option>
-          ))}
-        </CustomModalSelect>
-        <AssignButton disabled={!inputValue} onClick={handleAssign}>
-          Assign
-        </AssignButton>
-      </ModalSelectWrapper>
+      {trainerMode ? (
+        <>
+          <Row>
+            <AssignTitle>Assign Workouts</AssignTitle>
+          </Row>
+          <Row gutter={16}>
+            <Col xs={24} sm={24} md={12}>
+              <FormItem>
+                <LabelModal>Workout</LabelModal>
+                <CustomModalSelect
+                  style={{ width: "100%" }}
+                  placeholder="Select Workout"
+                  value={inputs.workoutId}
+                  onChange={(value) => {
+                    setInputs({ ...inputs, workoutId: value });
+                  }}
+                >
+                  {workouts?.map((item) => (
+                    <Select.Option key={item.id} value={item.id}>
+                      {item.title}
+                    </Select.Option>
+                  ))}
+                </CustomModalSelect>
+              </FormItem>
+            </Col>
+            <Col xs={24} sm={24} md={12}>
+              <FormItem>
+                <LabelModal>Equipment</LabelModal>
+                <CustomModalSelect
+                  style={{ width: "100%" }}
+                  placeholder="Select Equipment"
+                  value={inputs.equipmentId}
+                  onChange={(value) => {
+                    setInputs({ ...inputs, equipmentId: value });
+                  }}
+                >
+                  {equipments?.map((item) => (
+                    <Select.Option key={item.id} value={item.id}>
+                      {item.name}
+                    </Select.Option>
+                  ))}
+                </CustomModalSelect>
+              </FormItem>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col xs={24} sm={24} md={12}>
+              <FormItem>
+                <LabelModal>Number Of Sessions</LabelModal>
+                <InputFelidModel
+                  name="numberOfSessions"
+                  onChange={handleOnChange}
+                  value={inputs.numberOfSessions}
+                />
+              </FormItem>
+            </Col>
+            <Col xs={24} sm={24} md={12}>
+              <FormItem>
+                <LabelModal>Description</LabelModal>
+                <InputFelidModel
+                  name="description"
+                  onChange={handleOnChange}
+                  value={inputs.description}
+                />
+              </FormItem>
+            </Col>
+          </Row>
+          <Row justify={"end"}>
+            <AssignButton
+              onClick={handleWorkOutEventAssign}
+              style={{ marginTop: "10px" }}
+            >
+              Assign
+            </AssignButton>
+          </Row>
+        </>
+      ) : (
+        userRoles.ADMIN === user.userRole && (
+          <ModalSelectWrapper>
+            <CustomModalSelect
+              placeholder="Assign Trainer"
+              value={inputValue}
+              onChange={(value) => {
+                setInputValue(value);
+              }}
+            >
+              {instructors?.map((item) => (
+                <Select.Option key={item.userID} value={item.userID}>
+                  {item.fullName}
+                </Select.Option>
+              ))}
+            </CustomModalSelect>
+            <AssignButton disabled={!inputValue} onClick={handleAssign}>
+              Assign
+            </AssignButton>
+          </ModalSelectWrapper>
+        )
+      )}
     </Modal>
   );
 };

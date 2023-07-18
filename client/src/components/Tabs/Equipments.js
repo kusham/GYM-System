@@ -14,6 +14,8 @@ import { CustomForm, FormItem, InputFelid, Label } from "./style";
 import { Col, Row } from "antd";
 import { addEquipment, getEquipment } from "../../actions/EquipmentAction";
 import EquipmentModal from "./Modals/EquipmentModal";
+import EquipmentEdit from "./Edit/EquipmentEdit";
+import { userRoles } from "../../resources/UserRoles";
 
 const Equipments = () => {
   const columns = [
@@ -49,20 +51,22 @@ const Equipments = () => {
               }}
               style={{ cursor: "pointer" }}
             />
-            <EditOutlined
+            {userRoles.ADMIN === user?.userRole && <EditOutlined
               onClick={() => {
                 handleEditEquipment(record);
               }}
               style={{ cursor: "pointer" }}
-            />
+            />}
           </IconWrapper>
         );
       },
     },
   ];
+  const user = JSON.parse(sessionStorage.getItem("profile"));
   const [addEquip, setAddEquip] = useState(false);
   const [equipments, setEquipments] = useState([]);
   const [equipment, setEquipment] = useState([]);
+  const [editMode, setEditMode] = useState(false);
   const [inputs, setInputs] = useState({
     name: "",
     totalCount: "",
@@ -72,7 +76,8 @@ const Equipments = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleEditEquipment = (equipment) => {
-
+    setEquipment(equipment);
+    setEditMode(true);
   };
 
   const handleViewEquipment = (equipment) => {
@@ -102,85 +107,101 @@ const Equipments = () => {
 
   useEffect(() => {
     handleFetchData();
-  }, [addEquip]);
-  
+  }, [addEquip, editMode, isModalOpen]);
+
   const handleOk = () => {
     setIsModalOpen(false);
   };
   return (
     <Container>
-      <ButtonContainer>
-        {addEquip ? (
-          <AddButton onClick={() => setAddEquip(false)}>
-            VIEW EQUIPMENTS
-          </AddButton>
-        ) : (
-          <AddButton onClick={() => setAddEquip(true)}>
-            ADD EQUIPMENTS
-          </AddButton>
-        )}
-      </ButtonContainer>
-      {!addEquip ? (
-        <CustomTable dataSource={equipments} columns={columns} />
+      {editMode ? (
+        <>
+          <ButtonContainer style={{ justifyContent: "flex-start" }}>
+            <AddButton onClick={() => setEditMode(false)}>BACK</AddButton>
+          </ButtonContainer>
+          <EquipmentEdit equipment={equipment} setEditMode={setEditMode} />
+        </>
       ) : (
-        <FormContainer>
-          <CustomForm>
-            <Row gutter={24} style={{ gap: "30px" }}>
-              <Col span={24}>
-                <FormItem>
-                  <Label>Name</Label>
-                  <InputFelid
-                    name="name"
-                    onChange={handleOnChange}
-                    value={inputs.name}
-                  />
-                </FormItem>
-              </Col>
-              <Col span={24}>
-                <FormItem>
-                  <Label>Total Count</Label>
-                  <InputFelid
-                    name="totalCount"
-                    onChange={handleOnChange}
-                    value={inputs.totalCount}
-                  />
-                </FormItem>
-              </Col>
-              <Col span={24}>
-                <FormItem>
-                  <Label>Available Count</Label>
-                  <InputFelid
-                    name="availableCount"
-                    onChange={handleOnChange}
-                    value={inputs.availableCount}
-                  />
-                </FormItem>
-              </Col>
-              <Col span={24}>
-                <FormItem>
-                  <Label>Description</Label>
-                  <InputFelid
-                    name="description"
-                    onChange={handleOnChange}
-                    value={inputs.description}
-                  />
-                </FormItem>
-              </Col>
+        <>
+          {userRoles.ADMIN === user?.userRole && <ButtonContainer>
+            {addEquip ? (
+              <AddButton onClick={() => setAddEquip(false)}>
+                VIEW EQUIPMENTS
+              </AddButton>
+            ) : (
+              <AddButton onClick={() => setAddEquip(true)}>
+                ADD EQUIPMENTS
+              </AddButton>
+            )}
+          </ButtonContainer>}
+          {!addEquip ? (
+            <CustomTable dataSource={equipments} columns={columns} />
+          ) : (
+            <FormContainer>
+              <CustomForm>
+                <Row gutter={24} style={{ gap: "30px" }}>
+                  <Col span={24}>
+                    <FormItem>
+                      <Label>Name</Label>
+                      <InputFelid
+                        name="name"
+                        onChange={handleOnChange}
+                        value={inputs.name}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col span={24}>
+                    <FormItem>
+                      <Label>Total Count</Label>
+                      <InputFelid
+                        name="totalCount"
+                        onChange={handleOnChange}
+                        value={inputs.totalCount}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col span={24}>
+                    <FormItem>
+                      <Label>Available Count</Label>
+                      <InputFelid
+                        name="availableCount"
+                        onChange={handleOnChange}
+                        value={inputs.availableCount}
+                      />
+                    </FormItem>
+                  </Col>
+                  <Col span={24}>
+                    <FormItem>
+                      <Label>Description</Label>
+                      <InputFelid
+                        name="description"
+                        onChange={handleOnChange}
+                        value={inputs.description}
+                      />
+                    </FormItem>
+                  </Col>
 
-              <FormItem style={{ alignItems: "flex-end" }}>
-                <CreateButton
-                  type="primary"
-                  htmlType="submit"
-                  onClick={handleCreate}
-                >
-                  SUBMIT
-                </CreateButton>
-              </FormItem>
-            </Row>
-          </CustomForm>
-        </FormContainer>
+                  <FormItem style={{ alignItems: "flex-end" }}>
+                    <CreateButton
+                      type="primary"
+                      htmlType="submit"
+                      onClick={handleCreate}
+                    >
+                      SUBMIT
+                    </CreateButton>
+                  </FormItem>
+                </Row>
+              </CustomForm>
+            </FormContainer>
+          )}
+        </>
       )}
-      <EquipmentModal isModalOpen={isModalOpen} onOk={handleOk} equipment={equipment} />
+
+      <EquipmentModal
+        isModalOpen={isModalOpen}
+        onOk={handleOk}
+        equipment={equipment}
+      />
     </Container>
   );
 };

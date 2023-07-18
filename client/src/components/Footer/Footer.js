@@ -1,9 +1,7 @@
 import React from "react";
 import { Container, SocialIcons } from "./style";
 import {
-  FacebookFilled,
-  InstagramFilled,
-  TwitterSquareFilled,
+  FacebookFilled
 } from "@ant-design/icons";
 
 const Footer = () => {
@@ -14,8 +12,6 @@ const Footer = () => {
       </span>
       <SocialIcons>
         <FacebookFilled />
-        <InstagramFilled />
-        <TwitterSquareFilled />
       </SocialIcons>
     </Container>
   );

@@ -37,3 +37,28 @@ export const getWorkouts = async () => {
       });
     }
   };
+
+  
+export const updateWorkout = async (workout) => {
+  try {
+    const { data } = await API.put(
+      `/api/workout/update/${workout.id}`,
+      workout
+    );
+    if (data.success) {
+      notification.success({
+        message: "Success",
+        description: data?.message,
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
