@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 
 const db = require("../config/DatabaseConnection");
+const WorkoutEvent = require("./WorkoutEventModel");
 // Define a model
 var User = db.define(
   "user",
@@ -88,6 +89,16 @@ User.belongsTo(User, {
     name: "instructorId",
     unique: false,
   },
+});
+
+User.hasMany(WorkoutEvent, {
+  foreignKey: 'memberId',
+  as: 'memberEvents',
+});
+
+User.hasMany(WorkoutEvent, {
+  foreignKey: 'trainerId',
+  as: 'trainerEvents',
 });
 
 module.exports = User;

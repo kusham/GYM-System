@@ -9,6 +9,7 @@ const {
   getInstructorById,
   getNewRegistrants,
   assignToInstructor,
+  getMembersAssignToInstructor,
 } = require("../controllers/UserControllers");
 const router = express.Router();
 
@@ -31,5 +32,7 @@ router.get("/getNewRegistrants", getNewRegistrants);
 
 router.put("/updateUser/:userID", updateUser);
 router.put("/assignToInstructor", assignToInstructor);
+
+router.get("/getMembersAssignToInstructor/:id", getMembersAssignToInstructor);
 
 module.exports = router;

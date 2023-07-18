@@ -12,6 +12,8 @@ const dbSync = require("./src/config/DatabaseSync");
 var userRoutes = require("./src/routes/UserRoutes");
 var workoutRoutes = require("./src/routes/WorkoutRoutes");
 var equipmentRoutes = require("./src/routes/EquipmentRoutes");
+var events = require("./src/routes/WorkoutEventRoutes");
+
 
 
 const app = express();
@@ -30,6 +32,8 @@ app.get("/", (req, res) => {
 app.use("/api/user", userRoutes);
 app.use("/api/workout", workoutRoutes);
 app.use("/api/equipment", equipmentRoutes);
+app.use("/api/event", events);
+
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

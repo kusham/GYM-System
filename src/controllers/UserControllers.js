@@ -212,7 +212,7 @@ module.exports.getNewRegistrants = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "New Registrants fetched Successfully.",
-      count: newRegistrants,
+      members: newRegistrants,
     });
   } catch (error) {
     res.status(500).json({
@@ -248,6 +248,42 @@ module.exports.assignToInstructor = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Assign failed",
+      error: error.message,
+    });
+  }
+};
+
+
+
+//-------------------------get Members Assign To the Instructor--------------------------
+module.exports.getMembersAssignToInstructor = async (req, res) => {
+  console.log("get Members Assign To the Instructor");
+  try {
+    const members = await User.findAll({
+      where: { instructorId: req.params.id },
+      attributes: {
+        exclude: ["password"],
+      },
+      include: [
+        {
+          model: User,
+          as: "instructor",
+          attributes: {
+            exclude: ["password"], // Exclude the 'password' property
+          },
+        },
+      ],
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "members fetched Successfully.",
+      members: members,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "members fetch failed",
       error: error.message,
     });
   }

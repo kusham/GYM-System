@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const Equipment = require("../models/EquipmentModel");
 
 //-------------------------create new Equipment--------------------------
@@ -111,7 +112,7 @@ module.exports.getEquipmentById = async (req, res) => {
   console.log("get Equipment by id");
   try {
     const equipment = await Equipment.findOne({
-        where: {id : req.params.id}
+      where: { id: req.params.id },
     });
 
     res.status(200).json({
@@ -123,6 +124,28 @@ module.exports.getEquipmentById = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Equipment fetch failed",
+      error: error.message,
+    });
+  }
+};
+
+//-------------------------get available Equipment--------------------------
+module.exports.getAvailableEquipment = async (req, res) => {
+  console.log("get available Equipment");
+  try {
+    const equipments = await Equipment.findAll({
+      where: { availableCount: { [Op.gt]: 0 } },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "available Equipment fetched Successfully.",
+      equipments: equipments,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "available Equipment fetch failed",
       error: error.message,
     });
   }

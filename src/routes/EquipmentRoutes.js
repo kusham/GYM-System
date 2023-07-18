@@ -1,5 +1,5 @@
 const express = require("express");
-const { createEquipment, getAllEquipments, updateEquipmentById, deleteEquipmentById, getEquipmentById } = require("../controllers/EquipmentControllers");
+const { createEquipment, getAllEquipments, updateEquipmentById, deleteEquipmentById, getEquipmentById, getAvailableEquipment } = require("../controllers/EquipmentControllers");
 
 const router = express.Router();
 
@@ -14,5 +14,7 @@ router.get("/getall",getAllEquipments);
 router.put("/update/:id", updateEquipmentById);
 router.delete("/delete/:id", deleteEquipmentById);
 router.get("/getById/:id", getEquipmentById);
+router.get("/available/getall", getAvailableEquipment);
+
 
 module.exports = router;

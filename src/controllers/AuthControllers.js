@@ -54,7 +54,7 @@ module.exports.loginUser = async (req, res) => {
   console.log("Login user");
   try {
     const existingUser = await User.findOne({
-      where: { userID: req.body.userID },
+      where: { email: req.body.email },
     });
     if (!existingUser) {
       //check existing userID

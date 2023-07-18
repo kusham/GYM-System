@@ -4,6 +4,7 @@ var db = require("./DatabaseConnection"); // import database connection Database
 const User = require("../models/UserModel");
 const Workout = require("../models/WorkoutModel");
 const Equipment = require("../models/EquipmentModel");
+const WorkoutEvent = require("../models/WorkoutEventModel");
 
 const runSeeders = require("./seeders");
 
