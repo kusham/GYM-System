@@ -21,26 +21,16 @@ const MemberDashboard = () => {
     },
     {
       key: "2",
-      label: `All Members`,
-      children: <Members forceRender={forceRender} />,
-    },
-    {
-      key: "3",
       label: `Equipments`,
       children: <Equipments />,
     },
     {
-      key: "4",
-      label: `Workouts`,
-      children: <Workouts />,
-    },
-    {
-      key: "5",
+      key: "3",
       label: `Assigned Workout`,
       children: <AssignedWorkouts forceRender={forceRender} />,
     },
     {
-      key: "6",
+      key: "4",
       label: `Profile`,
       children: <Profile setForceRender={setForceRender} />,
     },
