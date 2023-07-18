@@ -1,5 +1,6 @@
 import { notification } from "antd";
 import axios from "axios";
+import dayjs from "dayjs";
 
 const API = axios.create({ baseURL: "http://localhost:5000" });
 
@@ -103,8 +104,7 @@ export const getMembersAssignToTrainer = async () => {
 
 export const updateUser = async (userData) => {
   try {
-    userData.dob = userData?.dob?.toString();
-    userData.purpose = userData?.purpose?.join(", ");
+    // userData.purpose = userData?.purpose?.join(", ");
     const { data } = await API.put(
       `/api/user/updateUser/${userData.userID}`,
       userData
@@ -158,6 +158,25 @@ export const getMemberByID = async (userID) => {
     );
     if (data.success) {
       return data?.member;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const getTrainerByID = async (userID) => {
+  try {
+    const { data } = await API.get(
+      `/api/user/getInstructorById/${userID}`
+    );
+    if (data.success) {
+      return data?.instructor;
     } else {
       return null;
     }

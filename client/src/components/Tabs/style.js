@@ -195,8 +195,27 @@ export const Circle = styled.div`
   font-weight: bold;
 `;
 
-export const MarkingContainer = styled.div`
-`;
+export const MarkingContainer = styled.div``;
 export const MakingTitle = styled.div`
-font-weight: 600;
+  font-weight: 600;
+`;
+
+export const ProfileContent = styled.div`
+  color: white;
+  background: rgb(255, 255, 255, 0.1);
+  padding: 50px;
+  border-radius: 20px;
+`;
+
+export const DataItem = styled.div`
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+`;
+export const DataTitle = styled.div`
+  font-size: 20px;
+`;
+
+export const Data = styled.div`
+  font-size: 25px;
 `;
