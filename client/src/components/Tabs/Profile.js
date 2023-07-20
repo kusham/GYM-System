@@ -7,6 +7,8 @@ import {
   DataItem,
   DataTitle,
   FormContainer,
+  LogoutButton,
+  LogoutWrapper,
   ProfileContent,
 } from "./style";
 import {
@@ -65,6 +67,12 @@ const Profile = () => {
   };
   const handleOnChangeDatePicker = (date) => {
     setProfile({ ...profile, dob: date });
+  };
+
+  const handleLogout = () => {
+    // Clear session storage
+    sessionStorage.clear();
+    window.location.reload();
   };
 
   return (
@@ -158,6 +166,9 @@ const Profile = () => {
               </DataItem>
             </Col>
           </Row>
+          <LogoutWrapper>
+            <LogoutButton onClick={handleLogout}>Log out</LogoutButton>
+          </LogoutWrapper>
         </ProfileContent>
       ) : (
         <FormContainer>

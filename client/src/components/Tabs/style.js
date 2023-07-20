@@ -219,3 +219,17 @@ export const DataTitle = styled.div`
 export const Data = styled.div`
   font-size: 25px;
 `;
+
+export const LogoutWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+export const LogoutButton = styled(Button)`  
+border: 1px solid red;
+  border-radius: 5px;
+  height: auto;
+  background: red;
+  font-size: 15px;
+  font-family: NationalBold, Helvetica, Arial, Sans-serif;
+  font-weight: 600;`;
