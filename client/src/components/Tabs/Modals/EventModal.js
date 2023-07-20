@@ -7,8 +7,10 @@ import {
   MarkingContainer,
 } from "../style";
 import { markAttendance } from "../../../actions/WorkoutEventAction";
+import { userRoles } from "../../../resources/UserRoles";
 
 const EventModal = ({ isModalOpen, onOk, event }) => {
+  const user = JSON.parse(sessionStorage.getItem("profile"));
   const [checkedValues, setCheckedValues] = useState([]);
   const checkboxOptions = () => {
     return Array.from(
@@ -85,7 +87,7 @@ const EventModal = ({ isModalOpen, onOk, event }) => {
       <MarkingContainer>
         <MakingTitle>Mark Attendance</MakingTitle>
         <Row>
-          <CheckBoxes onChange={handleOnChange} value={checkedValues}>
+          <CheckBoxes onChange={handleOnChange} value={checkedValues} disabled={userRoles.MEMBER === user?.userRole}>
             {checkboxOptions().map((option, index) => (
               <Checkbox key={index} value={option}></Checkbox>
             ))}
