@@ -86,7 +86,7 @@ module.exports.deleteWorkoutById = async (req, res) => {
       where: { id: req.params.id },
     });
 
-    if (result[0] == 1) {
+    if (result == 1) {
       res.status(200).json({
         success: true,
         message: "workout deleted Successfully.",
@@ -111,7 +111,7 @@ module.exports.getWorkoutById = async (req, res) => {
   console.log("get workout by id");
   try {
     const workout = await Workout.findOne({
-        where: {id : req.params.id}
+      where: { id: req.params.id },
     });
 
     res.status(200).json({
