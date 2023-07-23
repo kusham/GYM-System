@@ -87,7 +87,7 @@ module.exports.deleteEquipmentById = async (req, res) => {
       where: { id: req.params.id },
     });
 
-    if (result[0] == 1) {
+    if (result == 1) {
       res.status(200).json({
         success: true,
         message: "Equipment deleted Successfully.",

@@ -1,5 +1,9 @@
 const express = require("express");
-const { registerUser, loginUser, updateUser } = require("../controllers/AuthControllers");
+const {
+  registerUser,
+  loginUser,
+  updateUser,
+} = require("../controllers/AuthControllers");
 const {
   getAllUsers,
   getAllMembers,
@@ -10,6 +14,7 @@ const {
   getNewRegistrants,
   assignToInstructor,
   getMembersAssignToInstructor,
+  deleteMember,
 } = require("../controllers/UserControllers");
 const router = express.Router();
 
@@ -34,5 +39,6 @@ router.put("/updateUser/:userID", updateUser);
 router.put("/assignToInstructor", assignToInstructor);
 
 router.get("/getMembersAssignToInstructor/:id", getMembersAssignToInstructor);
+router.delete("/deleteMemberbyId/:id", deleteMember);
 
 module.exports = router;
