@@ -93,9 +93,9 @@ const EventModal = ({ isModalOpen, onOk, event }) => {
             ))}
           </CheckBoxes>
         </Row>
-        <Row justify={"end"}>
+        {userRoles.INSTRUCTOR === user?.userRole && <Row justify={"end"}>
           <AssignButton onClick={handleAttendance}>Update</AssignButton>
-        </Row>
+        </Row>}
       </MarkingContainer>
     </Modal>
   );

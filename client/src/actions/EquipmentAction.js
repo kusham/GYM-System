@@ -80,3 +80,87 @@ export const getAvailableEquipment = async () => {
     });
   }
 };
+
+export const requestEquipment = async (inputData, equipmentId) => {
+  try {
+    inputData.equipmentId = equipmentId;
+    const { data } = await API.post("/api/request/add", inputData);
+    if (data.success) {
+      notification.success({
+        message: "Success",
+        description: data?.message,
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const getRequestEquipment = async () => {
+  try {
+    const { data } = await API.get("/api/request/getall");
+    if (data.success) {
+      console.log(data);
+      return data.requests;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const rejectRequestEquipment = async (request) => {
+  try {
+    request.status = "Reject";
+    const { data } = await API.put("/api/request/reject", request);
+    if (data.success) {
+      notification.success({
+        message: "Success",
+        description: "Requests Reject Successfully.",
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const acceptRequestEquipment = async (request) => {
+  try {
+    request.status = "Accept";
+    const { data } = await API.put("/api/request/accept", request);
+    if (data.success) {
+      notification.success({
+        message: "Success",
+        description: "Requests Accept Successfully.",
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};

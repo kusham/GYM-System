@@ -6,6 +6,7 @@ import {
   Data,
   DataItem,
   DataTitle,
+  ErrorMessage,
   FormContainer,
   LogoutButton,
   LogoutWrapper,
@@ -24,6 +25,7 @@ import { Col, Row } from "antd";
 import dayjs from "dayjs";
 import { RegisterButton } from "../Registration/style";
 import { updateUser } from "../../actions/AuthActions";
+import { validationSchemaUserProfile } from "../utils/validations";
 
 const preferenceOptions = [
   { label: "Weight Loss", value: "Weight Loss" },
@@ -35,31 +37,28 @@ const Profile = () => {
   const [profile, setProfile] = useState(
     JSON.parse(sessionStorage.getItem("profile"))
   );
+  const [errors, setErrors] = useState({});
+  const [validationMode, setValidationMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const handleEdit = () => {
-    setProfile({ ...profile, dob: dayjs(profile.dob) });
+    setProfile({
+      ...profile,
+      dob: dayjs(profile.dob),
+      weight: profile.weight + "kg",
+      height: profile.height + "cm",
+    });
     setEditMode(true);
   };
-  const clearForm = () => {
-    setProfile({
-      fullName: "",
-      email: "",
-      nic: "",
-      dob: dayjs(new Date()),
-      gender: "male",
-      mobile: "",
-      password: "",
-      branch: "hikkaduwa",
-      purpose: [],
-      weight: "",
-      height: "",
-      otherInfo: "",
-    });
-  };
+
   const handleUpdate = () => {
-    updateUser(profile);
-    setEditMode(false);
-    sessionStorage.setItem("profile", JSON.stringify(profile));
+    setValidationMode(true);
+    if (errors === null) {
+      updateUser(profile);
+      setEditMode(false);
+      const user = profile;
+      user.purpose = user.purpose.split(",");
+      sessionStorage.setItem("profile", JSON.stringify(user));
+    }
   };
 
   const handleOnChange = (event) => {
@@ -74,6 +73,23 @@ const Profile = () => {
     sessionStorage.clear();
     window.location.reload();
   };
+
+  useEffect(() => {
+    if (validationMode) {
+      validationSchemaUserProfile
+        .validate(profile, { abortEarly: false })
+        .then(() => {
+          setErrors(null);
+        })
+        .catch((validationErrors) => {
+          const newErrors = {};
+          validationErrors.inner.forEach((error) => {
+            newErrors[error.path] = error.message;
+          });
+          setErrors(newErrors);
+        });
+    }
+  }, [profile, validationMode]);
 
   return (
     <Container>
@@ -150,19 +166,13 @@ const Profile = () => {
             <Col sm={24} md={8} lg={6}>
               <DataItem>
                 <DataTitle>Weight : </DataTitle>
-                <Data>{profile.weight}</Data>
+                <Data>{profile.weight} kg</Data>
               </DataItem>
             </Col>
             <Col sm={24} md={8} lg={6}>
               <DataItem>
                 <DataTitle>Height : </DataTitle>
-                <Data>{profile.height}</Data>
-              </DataItem>
-            </Col>
-            <Col sm={24} md={8} lg={6}>
-              <DataItem>
-                <DataTitle>Other Info : </DataTitle>
-                <Data>{profile.otherInfo}</Data>
+                <Data>{profile.height} cm</Data>
               </DataItem>
             </Col>
           </Row>
@@ -182,6 +192,9 @@ const Profile = () => {
                     onChange={handleOnChange}
                     value={profile.fullName}
                   />
+                  {errors?.fullName && (
+                    <ErrorMessage>{errors?.fullName}</ErrorMessage>
+                  )}
                 </FormItem>
               </Col>
               <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -192,6 +205,7 @@ const Profile = () => {
                     onChange={handleOnChangeDatePicker}
                     value={profile.dob}
                   />
+                  {errors?.dob && <ErrorMessage>{errors?.dob}</ErrorMessage>}
                 </FormItem>
               </Col>
               <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -208,6 +222,9 @@ const Profile = () => {
                     }}
                     value={profile.gender}
                   />
+                  {errors?.gender && (
+                    <ErrorMessage>{errors?.gender}</ErrorMessage>
+                  )}
                 </FormItem>
               </Col>
             </Row>
@@ -226,6 +243,9 @@ const Profile = () => {
                     }}
                     value={profile.branch}
                   />
+                  {errors?.branch && (
+                    <ErrorMessage>{errors?.branch}</ErrorMessage>
+                  )}
                 </FormItem>
               </Col>
               <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -236,6 +256,9 @@ const Profile = () => {
                     onChange={handleOnChange}
                     value={profile.mobile}
                   />
+                  {errors?.mobile && (
+                    <ErrorMessage>{errors?.mobile}</ErrorMessage>
+                  )}
                 </FormItem>
               </Col>
               <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -246,6 +269,9 @@ const Profile = () => {
                     onChange={handleOnChange}
                     value={profile.email}
                   />
+                  {errors?.email && (
+                    <ErrorMessage>{errors?.email}</ErrorMessage>
+                  )}
                 </FormItem>
               </Col>
             </Row>
@@ -259,16 +285,20 @@ const Profile = () => {
                     onChange={handleOnChange}
                     value={profile.nic}
                   />
+                  {errors?.nic && <ErrorMessage>{errors?.nic}</ErrorMessage>}
                 </FormItem>
               </Col>
               <Col xs={24} sm={24} md={12} lg={8} xl={8}>
                 <FormItem>
-                  <Label>Other Info</Label>
+                  <Label>Weight</Label>
                   <InputFelid
-                    name="otherInfo"
+                    name="weight"
                     onChange={handleOnChange}
-                    value={profile.otherInfo}
+                    value={profile.weight}
                   />
+                  {errors?.weight && (
+                    <ErrorMessage>{errors?.weight}</ErrorMessage>
+                  )}
                 </FormItem>
               </Col>
               <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -279,21 +309,14 @@ const Profile = () => {
                     onChange={handleOnChange}
                     value={profile.height}
                   />
+                  {errors?.height && (
+                    <ErrorMessage>{errors?.height}</ErrorMessage>
+                  )}
                 </FormItem>
               </Col>
             </Row>
 
             <Row gutter={24}>
-              <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-                <FormItem>
-                  <Label>Weight</Label>
-                  <InputFelid
-                    name="weight"
-                    onChange={handleOnChange}
-                    value={profile.weight}
-                  />
-                </FormItem>
-              </Col>
               <Col xs={24} sm={24} md={12} lg={8} xl={8}>
                 <FormItem>
                   <Label>City</Label>
@@ -302,6 +325,7 @@ const Profile = () => {
                     onChange={handleOnChange}
                     value={profile.city}
                   />
+                  {errors?.city && <ErrorMessage>{errors?.city}</ErrorMessage>}
                 </FormItem>
               </Col>
               <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -314,6 +338,9 @@ const Profile = () => {
                       setProfile({ ...profile, purpose: value })
                     }
                   />
+                  {errors?.purpose && (
+                    <ErrorMessage>{errors?.purpose}</ErrorMessage>
+                  )}
                 </FormItem>
               </Col>
             </Row>

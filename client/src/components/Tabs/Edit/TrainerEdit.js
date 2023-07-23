@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col } from "antd";
 import {
   CustomDatePicker,
@@ -9,22 +9,58 @@ import {
   Label,
   CreateButton,
   EditContainer,
+  ErrorMessage,
 } from "../style";
 import { updateUser } from "../../../actions/AuthActions";
+import { validationSchemaTrainerEdit } from "../../utils/validations";
 const TrainerEdit = ({ trainer, setEditMode }) => {
-    const [inputs, setInputs] = useState(trainer);
-    const handleUpdate = async () => {
-      const res = await updateUser(inputs);
-      if(res) {
-        setEditMode(false)
-      }
-    };
-    const handleOnChange = (event) => {
-      setInputs({ ...inputs, [event.target.name]: event.target.value });
-    };
-    const handleOnChangeDatePicker = (date) => {
-      setInputs({ ...inputs, dob: date });
-    };
+  const [inputs, setInputs] = useState(trainer);
+  const [errors, setErrors] = useState({});
+  const [validationMode, setValidationMode] = useState(false);
+  const handleUpdate = () => {
+    setValidationMode(true);
+    validationSchemaTrainerEdit
+      .validate(inputs, { abortEarly: false })
+      .then(async () => {
+        const res = await updateUser(inputs);
+        if (res) {
+          setEditMode(false);
+        }
+        setValidationMode(false);
+        setErrors(null);
+      })
+      .catch((validationErrors) => {
+        const newErrors = {};
+        validationErrors.inner.forEach((error) => {
+          newErrors[error.path] = error.message;
+        });
+        setErrors(newErrors);
+      });
+  };
+
+  useEffect(() => {
+    if (validationMode) {
+      validationSchemaTrainerEdit
+        .validate(inputs, { abortEarly: false })
+        .then(() => {
+          setErrors(null);
+        })
+        .catch((validationErrors) => {
+          const newErrors = {};
+          validationErrors.inner.forEach((error) => {
+            newErrors[error.path] = error.message;
+          });
+          setErrors(newErrors);
+        });
+    }
+  }, [inputs, validationMode]);
+
+  const handleOnChange = (event) => {
+    setInputs({ ...inputs, [event.target.name]: event.target.value });
+  };
+  const handleOnChangeDatePicker = (date) => {
+    setInputs({ ...inputs, dob: date });
+  };
   return (
     <EditContainer>
       <CustomForm>
@@ -37,6 +73,9 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
                 onChange={handleOnChange}
                 value={inputs.fullName}
               />
+              {errors?.fullName && (
+                <ErrorMessage>{errors?.fullName}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -47,6 +86,7 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
                 onChange={handleOnChangeDatePicker}
                 value={inputs.dob}
               />
+              {errors?.dob && <ErrorMessage>{errors?.dob}</ErrorMessage>}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -63,6 +103,7 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
                 }}
                 value={inputs.gender}
               />
+              {errors?.gender && <ErrorMessage>{errors?.gender}</ErrorMessage>}
             </FormItem>
           </Col>
         </Row>
@@ -81,6 +122,7 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
                 }}
                 value={inputs.branch}
               />
+              {errors?.branch && <ErrorMessage>{errors?.branch}</ErrorMessage>}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -91,6 +133,7 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
                 onChange={handleOnChange}
                 value={inputs.mobile}
               />
+              {errors?.mobile && <ErrorMessage>{errors?.mobile}</ErrorMessage>}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -101,6 +144,7 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
                 onChange={handleOnChange}
                 value={inputs.email}
               />
+              {errors?.email && <ErrorMessage>{errors?.email}</ErrorMessage>}
             </FormItem>
           </Col>
         </Row>
@@ -114,16 +158,7 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
                 onChange={handleOnChange}
                 value={inputs.nic}
               />
-            </FormItem>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-            <FormItem>
-              <Label>Other Info</Label>
-              <InputFelid
-                name="otherInfo"
-                onChange={handleOnChange}
-                value={inputs.otherInfo}
-              />
+              {errors?.nic && <ErrorMessage>{errors?.nic}</ErrorMessage>}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -139,16 +174,36 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
                   },
                 ]}
                 onChange={(value) => {
-                    setInputs({ ...inputs, specialty: value });
-                  }}
+                  setInputs({ ...inputs, specialty: value });
+                }}
                 value={inputs.specialty}
               />
             </FormItem>
           </Col>
+          <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+            <FormItem>
+              <Label>Weight</Label>
+              <InputFelid
+                name="weight"
+                onChange={handleOnChange}
+                value={inputs.weight}
+              />
+              {errors?.weight && <ErrorMessage>{errors?.weight}</ErrorMessage>}
+            </FormItem>
+          </Col>
         </Row>
-
         <Row gutter={24}>
-          
+          <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+            <FormItem>
+              <Label>Height</Label>
+              <InputFelid
+                name="height"
+                onChange={handleOnChange}
+                value={inputs.height}
+              />
+              {errors?.height && <ErrorMessage>{errors?.height}</ErrorMessage>}
+            </FormItem>
+          </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <FormItem>
               <Label>City</Label>
@@ -159,7 +214,6 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
               />
             </FormItem>
           </Col>
-          
         </Row>
 
         <FormItem style={{ alignItems: "center" }}>
@@ -169,7 +223,7 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
         </FormItem>
       </CustomForm>
     </EditContainer>
-  )
-}
+  );
+};
 
-export default TrainerEdit
+export default TrainerEdit;

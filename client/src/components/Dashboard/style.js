@@ -2,7 +2,7 @@ import { Tabs } from "antd";
 import styled from "styled-components";
 
 export const RootContainer = styled.div`
-  padding: 30px 100px 0px 100px;
+  padding: 21px 100px 0px 100px;
 `;
 
 export const UserName = styled.div`
@@ -13,6 +13,12 @@ export const UserName = styled.div`
     color: orange;
   }
   margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  p {
+    font-size: 20px;
+  }
 `;
 
 export const CustomTab = styled(Tabs)`

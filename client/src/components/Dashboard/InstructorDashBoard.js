@@ -36,12 +36,12 @@ const InstructorDashBoard = () => {
     },
     {
       key: "5",
-      label: `Workouts`,
+      label: `Exercises`,
       children: <Workouts />,
     },
     {
       key: "6",
-      label: `Assigned Workout`,
+      label: `Assigned Exercise`,
       children: <AssignedWorkouts forceRender={forceRender} />,
     },
     {

@@ -22,7 +22,7 @@ const Dashboard = ({ userRole }) => {
   };
   return (
     <RootContainer>
-      <UserName>Welcome, <span>{user?.fullName}</span></UserName>
+      <UserName>Welcome, <span>{user?.fullName}</span><p>({user?.userRole})</p></UserName>
       {renderDashboard()}
     </RootContainer>
   );

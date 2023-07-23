@@ -1,4 +1,4 @@
-import { Button, Checkbox, DatePicker, Form, Input, Select } from "antd";
+import { Button, Checkbox, DatePicker, Input, Select } from "antd";
 import styled from "styled-components";
 
 export const CustomForm = styled.div`
@@ -54,6 +54,12 @@ export const FormItem = styled.div`
 export const Label = styled.p`
   color: #e4e4e4;
   font-size: 20px;
+  font-family: NationalBold, Helvetica, Arial, Sans-serif;
+`;
+
+export const ErrorMessage = styled.p`
+  color: red;
+  font-size: 13px;
   font-family: NationalBold, Helvetica, Arial, Sans-serif;
 `;
 

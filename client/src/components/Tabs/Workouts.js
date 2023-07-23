@@ -6,6 +6,7 @@ import {
   CreateButton,
   CustomSelect,
   CustomTable,
+  ErrorMessage,
   FormContainer,
   IconWrapper,
 } from "./style";
@@ -17,6 +18,7 @@ import { addWorkouts, getWorkouts } from "../../actions/WorkoutAction";
 import WorkoutModal from "./Modals/WorkoutModal";
 import WorkoutEdit from "./Edit/WorkoutEdit";
 import { userRoles } from "../../resources/UserRoles";
+import { workoutSchema } from "../utils/validations";
 const Workouts = () => {
   const user = JSON.parse(sessionStorage.getItem("profile"));
 
@@ -58,7 +60,7 @@ const Workouts = () => {
               }}
               style={{ cursor: "pointer" }}
             />
-            {userRoles.ADMIN === user?.userRole && (
+            {userRoles.MEMBER !== user?.userRole && (
               <EditOutlined
                 onClick={() => {
                   handleEditWorkout(record);
@@ -75,13 +77,15 @@ const Workouts = () => {
   const [workouts, setWorkouts] = useState([]);
   const [workout, setWorkout] = useState([]);
   const [editMode, setEditMode] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [validationMode, setValidationMode] = useState(false);
   const [inputs, setInputs] = useState({
     title: "",
     mainGoal: "",
-    trainingLevel: "easy",
+    trainingLevel: "",
     type: "",
     duration: "",
-    targetGender: "male",
+    targetGender: "",
     description: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -97,18 +101,50 @@ const Workouts = () => {
   };
 
   const handleCreate = () => {
-    addWorkouts(inputs);
-    clearForm();
+    setValidationMode(true);
+    workoutSchema
+      .validate(inputs, { abortEarly: false })
+      .then(() => {
+        addWorkouts(inputs);
+        clearForm();
+        setValidationMode(false);
+        setErrors(null);
+      })
+      .catch((validationErrors) => {
+        const newErrors = {};
+        validationErrors.inner.forEach((error) => {
+          newErrors[error.path] = error.message;
+        });
+        setErrors(newErrors);
+      });
   };
+
+  useEffect(() => {
+    if (validationMode) {
+      workoutSchema
+        .validate(inputs, { abortEarly: false })
+        .then(() => {
+          setErrors(null);
+        })
+        .catch((validationErrors) => {
+          const newErrors = {};
+          validationErrors.inner.forEach((error) => {
+            newErrors[error.path] = error.message;
+          });
+          setErrors(newErrors);
+        });
+    }
+  }, [inputs, validationMode]);
+
 
   const clearForm = () => {
     setInputs({
       title: "",
       mainGoal: "",
-      trainingLevel: "easy",
+      trainingLevel: "",
       type: "",
       duration: "",
-      targetGender: "male",
+      targetGender: "",
       description: "",
     });
   };
@@ -138,7 +174,7 @@ const Workouts = () => {
         </>
       ) : (
         <>
-          {userRoles.ADMIN === user?.userRole && (
+          {userRoles.MEMBER !== user?.userRole && (
             <ButtonContainer>
               {addWorkout ? (
                 <AddButton onClick={() => setAddWorkout(false)}>
@@ -165,6 +201,7 @@ const Workouts = () => {
                         onChange={handleOnChange}
                         value={inputs.title}
                       />
+                       {errors?.title && <ErrorMessage>{errors?.title}</ErrorMessage>}
                     </FormItem>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -175,6 +212,7 @@ const Workouts = () => {
                         onChange={handleOnChange}
                         value={inputs.mainGoal}
                       />
+                       {errors?.mainGoal && <ErrorMessage>{errors?.mainGoal}</ErrorMessage>}
                     </FormItem>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -185,6 +223,7 @@ const Workouts = () => {
                         onChange={handleOnChange}
                         value={inputs.duration}
                       />
+                       {errors?.duration && <ErrorMessage>{errors?.duration}</ErrorMessage>}
                     </FormItem>
                   </Col>
                 </Row>
@@ -204,6 +243,7 @@ const Workouts = () => {
                         }}
                         value={inputs.targetGender}
                       />
+                       {errors?.targetGender && <ErrorMessage>{errors?.targetGender}</ErrorMessage>}
                     </FormItem>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -214,6 +254,7 @@ const Workouts = () => {
                         onChange={handleOnChange}
                         value={inputs.type}
                       />
+                       {errors?.type && <ErrorMessage>{errors?.type}</ErrorMessage>}
                     </FormItem>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -231,6 +272,7 @@ const Workouts = () => {
                         }}
                         value={inputs.trainingLevel}
                       />
+                       {errors?.trainingLevel && <ErrorMessage>{errors?.trainingLevel}</ErrorMessage>}
                     </FormItem>
                   </Col>
                 </Row>
@@ -243,6 +285,7 @@ const Workouts = () => {
                         onChange={handleOnChange}
                         value={inputs.description}
                       />
+                       {errors?.description && <ErrorMessage>{errors?.description}</ErrorMessage>}
                     </FormItem>
                   </Col>
                 </Row>

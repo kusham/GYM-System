@@ -4,6 +4,7 @@ import {
   AssignButton,
   AssignTitle,
   CustomModalSelect,
+  ErrorMessage,
   FormItem,
   InputFelidModel,
   LabelModal,
@@ -14,12 +15,14 @@ import { getWorkouts } from "../../../actions/WorkoutAction";
 import { getAvailableEquipment } from "../../../actions/EquipmentAction";
 import { addWorkoutEvents } from "../../../actions/WorkoutEventAction";
 import { userRoles } from "../../../resources/UserRoles";
+import { assignExerciseSchema } from "../../utils/validations";
 
 const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
   const [instructors, setInstructors] = useState([]);
   const [workouts, setWorkouts] = useState([]);
   const [equipments, setEquipments] = useState([]);
-
+  const [errors, setErrors] = useState({});
+  const [validationMode, setValidationMode] = useState(false);
   const [inputValue, setInputValue] = useState(null);
 
   const [inputs, setInputs] = useState({
@@ -60,13 +63,44 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
   const handleOnChange = (event) => {
     setInputs({ ...inputs, [event.target.name]: event.target.value });
   };
-  console.log(member);
-  const handleWorkOutEventAssign = async () => {
-    const res = await addWorkoutEvents(member?.userID, inputs);
-    if (res) {
-      clearInputs();
-    }
+
+  const handleWorkOutEventAssign = () => {
+    setValidationMode(true);
+    assignExerciseSchema
+      .validate(inputs, { abortEarly: false })
+      .then(async () => {
+        const res = await addWorkoutEvents(member?.userID, inputs);
+        if (res) {
+          clearInputs();
+          onOk();
+          setValidationMode(false);
+        }
+      })
+      .catch((validationErrors) => {
+        const newErrors = {};
+        validationErrors.inner.forEach((error) => {
+          newErrors[error.path] = error.message;
+        });
+        setErrors(newErrors);
+      });
   };
+
+  useEffect(() => {
+    if (validationMode) {
+      assignExerciseSchema
+        .validate(inputs, { abortEarly: false })
+        .then(() => {
+          setErrors(null);
+        })
+        .catch((validationErrors) => {
+          const newErrors = {};
+          validationErrors.inner.forEach((error) => {
+            newErrors[error.path] = error.message;
+          });
+          setErrors(newErrors);
+        });
+    }
+  }, [inputs, validationMode]);
 
   return (
     <Modal
@@ -124,13 +158,15 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
       {trainerMode ? (
         <>
           <Row>
-            <AssignTitle>Assign Workouts</AssignTitle>
+            <AssignTitle>Assign Exercise</AssignTitle>
           </Row>
           <Row gutter={16}>
             <Col xs={24} sm={24} md={12}>
               <FormItem>
-                <LabelModal>Workout</LabelModal>
+                <LabelModal>Exercise</LabelModal>
                 <CustomModalSelect
+                  // mode="multiple"
+                  // allowClear
                   style={{ width: "100%" }}
                   placeholder="Select Workout"
                   value={inputs.workoutId}
@@ -144,6 +180,10 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
                     </Select.Option>
                   ))}
                 </CustomModalSelect>
+
+                {errors?.workoutId && (
+                  <ErrorMessage>{errors?.workoutId}</ErrorMessage>
+                )}
               </FormItem>
             </Col>
             <Col xs={24} sm={24} md={12}>
@@ -163,6 +203,9 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
                     </Select.Option>
                   ))}
                 </CustomModalSelect>
+                {errors?.equipmentId && (
+                  <ErrorMessage>{errors?.equipmentId}</ErrorMessage>
+                )}
               </FormItem>
             </Col>
           </Row>
@@ -175,6 +218,9 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
                   onChange={handleOnChange}
                   value={inputs.numberOfSessions}
                 />
+                {errors?.numberOfSessions && (
+                  <ErrorMessage>{errors?.numberOfSessions}</ErrorMessage>
+                )}
               </FormItem>
             </Col>
             <Col xs={24} sm={24} md={12}>
@@ -185,6 +231,9 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
                   onChange={handleOnChange}
                   value={inputs.description}
                 />
+                {errors?.description && (
+                  <ErrorMessage>{errors?.description}</ErrorMessage>
+                )}
               </FormItem>
             </Col>
           </Row>

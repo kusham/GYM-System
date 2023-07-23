@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "../style";
 import { Row, Col } from "antd";
 import {
@@ -6,6 +6,7 @@ import {
   CustomDatePicker,
   CustomForm,
   CustomSelect,
+  ErrorMessage,
   FormItem,
   InputFelid,
   Label,
@@ -14,7 +15,7 @@ import {
 } from "./style";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../../../actions/AuthActions";
-import dayjs from "dayjs";
+import { validationSchemaUserRegistration } from "../../utils/validations";
 
 const preferenceOptions = [
   { label: "Weight Loss", value: "Weight Loss" },
@@ -27,32 +28,61 @@ const SignupPage = () => {
     fullName: "",
     email: "",
     nic: "",
-    dob: dayjs(new Date()),
-    gender: "male",
+    dob: "",
+    gender: "",
     mobile: "",
     password: "",
-    branch: "hikkaduwa",
+    branch: "",
     purpose: [],
     agree: false,
   });
+  const [errors, setErrors] = useState({});
+  const [validationMode, setValidationMode] = useState(false);
   const navigate = useNavigate();
   const handleSignIn = () => {
-    console.log(inputs);
-    signUp(inputs, navigateToDashBoard);
+    setValidationMode(true);
+    validationSchemaUserRegistration
+        .validate(inputs, { abortEarly: false })
+        .then(() => {
+          signUp(inputs, navigateToDashBoard);
+        })
+        .catch((validationErrors) => {
+          const newErrors = {};
+          validationErrors.inner.forEach((error) => {
+            newErrors[error.path] = error.message;
+          });
+          setErrors(newErrors);
+        });
   };
   const navigateToDashBoard = () => {
     navigate("/auth/login", { replace: true });
   };
   const handleOnChange = (event) => {
-    console.log(event.target);
     setInputs({ ...inputs, [event.target.name]: event.target.value });
   };
   const handleOnChangeDatePicker = (date) => {
     setInputs({ ...inputs, dob: date });
   };
+
+  useEffect(() => {
+    if (validationMode) {
+      validationSchemaUserRegistration
+        .validate(inputs, { abortEarly: false })
+        .then(() => {
+          setErrors(null);
+        })
+        .catch((validationErrors) => {
+          const newErrors = {};
+          validationErrors.inner.forEach((error) => {
+            newErrors[error.path] = error.message;
+          });
+          setErrors(newErrors);
+        });
+    }
+  }, [inputs, validationMode]);
   return (
     <Container>
-      <CustomForm onFinish={handleSignIn}>
+      <CustomForm>
         <Row gutter={24}>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <FormItem>
@@ -62,6 +92,9 @@ const SignupPage = () => {
                 onChange={handleOnChange}
                 value={inputs.fullName}
               />
+              {errors?.fullName && (
+                <ErrorMessage>{errors?.fullName}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -72,6 +105,7 @@ const SignupPage = () => {
                 onChange={handleOnChangeDatePicker}
                 value={inputs.dob}
               />
+              {errors?.dob && <ErrorMessage>{errors?.dob}</ErrorMessage>}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -88,6 +122,7 @@ const SignupPage = () => {
                 }}
                 value={inputs.gender}
               />
+              {errors?.gender && <ErrorMessage>{errors?.gender}</ErrorMessage>}
             </FormItem>
           </Col>
         </Row>
@@ -106,6 +141,7 @@ const SignupPage = () => {
                 }}
                 value={inputs.branch}
               />
+              {errors?.branch && <ErrorMessage>{errors?.branch}</ErrorMessage>}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -116,6 +152,7 @@ const SignupPage = () => {
                 onChange={handleOnChange}
                 value={inputs.mobile}
               />
+              {errors?.mobile && <ErrorMessage>{errors?.mobile}</ErrorMessage>}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -126,6 +163,7 @@ const SignupPage = () => {
                 onChange={handleOnChange}
                 value={inputs.email}
               />
+              {errors?.email && <ErrorMessage>{errors?.email}</ErrorMessage>}
             </FormItem>
           </Col>
         </Row>
@@ -139,6 +177,7 @@ const SignupPage = () => {
                 onChange={handleOnChange}
                 value={inputs.nic}
               />
+              {errors?.nic && <ErrorMessage>{errors?.nic}</ErrorMessage>}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -149,6 +188,9 @@ const SignupPage = () => {
                 onChange={handleOnChange}
                 value={inputs.password}
               />
+              {errors?.password && (
+                <ErrorMessage>{errors?.password}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -159,6 +201,9 @@ const SignupPage = () => {
                 options={preferenceOptions}
                 onChange={(value) => setInputs({ ...inputs, purpose: value })}
               />
+              {errors?.purpose && (
+                <ErrorMessage>{errors?.purpose}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
         </Row>

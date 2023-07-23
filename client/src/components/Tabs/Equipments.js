@@ -5,6 +5,7 @@ import {
   Container,
   CreateButton,
   CustomTable,
+  ErrorMessage,
   FormContainer,
   IconWrapper,
 } from "./style";
@@ -16,6 +17,7 @@ import { addEquipment, getEquipment } from "../../actions/EquipmentAction";
 import EquipmentModal from "./Modals/EquipmentModal";
 import EquipmentEdit from "./Edit/EquipmentEdit";
 import { userRoles } from "../../resources/UserRoles";
+import { equipmentSchema } from "../utils/validations";
 
 const Equipments = () => {
   const columns = [
@@ -51,12 +53,14 @@ const Equipments = () => {
               }}
               style={{ cursor: "pointer" }}
             />
-            {userRoles.ADMIN === user?.userRole && <EditOutlined
-              onClick={() => {
-                handleEditEquipment(record);
-              }}
-              style={{ cursor: "pointer" }}
-            />}
+            {userRoles.ADMIN === user?.userRole && (
+              <EditOutlined
+                onClick={() => {
+                  handleEditEquipment(record);
+                }}
+                style={{ cursor: "pointer" }}
+              />
+            )}
           </IconWrapper>
         );
       },
@@ -67,6 +71,8 @@ const Equipments = () => {
   const [equipments, setEquipments] = useState([]);
   const [equipment, setEquipment] = useState([]);
   const [editMode, setEditMode] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [validationMode, setValidationMode] = useState(false);
   const [inputs, setInputs] = useState({
     name: "",
     totalCount: "",
@@ -85,9 +91,40 @@ const Equipments = () => {
     setIsModalOpen(true);
   };
   const handleCreate = () => {
-    addEquipment(inputs);
-    clearForm();
+    setValidationMode(true);
+    equipmentSchema
+      .validate(inputs, { abortEarly: false })
+      .then(() => {
+        addEquipment(inputs);
+        clearForm();
+        setValidationMode(false);
+        setErrors(null);
+      })
+      .catch((validationErrors) => {
+        const newErrors = {};
+        validationErrors.inner.forEach((error) => {
+          newErrors[error.path] = error.message;
+        });
+        setErrors(newErrors);
+      });
   };
+
+  useEffect(() => {
+    if (validationMode) {
+      equipmentSchema
+        .validate(inputs, { abortEarly: false })
+        .then(() => {
+          setErrors(null);
+        })
+        .catch((validationErrors) => {
+          const newErrors = {};
+          validationErrors.inner.forEach((error) => {
+            newErrors[error.path] = error.message;
+          });
+          setErrors(newErrors);
+        });
+    }
+  }, [inputs, validationMode]);
 
   const clearForm = () => {
     setInputs({
@@ -123,17 +160,19 @@ const Equipments = () => {
         </>
       ) : (
         <>
-          {userRoles.ADMIN === user?.userRole && <ButtonContainer>
-            {addEquip ? (
-              <AddButton onClick={() => setAddEquip(false)}>
-                VIEW EQUIPMENTS
-              </AddButton>
-            ) : (
-              <AddButton onClick={() => setAddEquip(true)}>
-                ADD EQUIPMENTS
-              </AddButton>
-            )}
-          </ButtonContainer>}
+          {userRoles.ADMIN === user?.userRole && (
+            <ButtonContainer>
+              {addEquip ? (
+                <AddButton onClick={() => setAddEquip(false)}>
+                  VIEW EQUIPMENTS
+                </AddButton>
+              ) : (
+                <AddButton onClick={() => setAddEquip(true)}>
+                  ADD EQUIPMENTS
+                </AddButton>
+              )}
+            </ButtonContainer>
+          )}
           {!addEquip ? (
             <CustomTable dataSource={equipments} columns={columns} />
           ) : (
@@ -148,26 +187,37 @@ const Equipments = () => {
                         onChange={handleOnChange}
                         value={inputs.name}
                       />
+                      {errors?.name && (
+                        <ErrorMessage>{errors?.name}</ErrorMessage>
+                      )}
                     </FormItem>
                   </Col>
                   <Col span={24}>
                     <FormItem>
                       <Label>Total Count</Label>
                       <InputFelid
+                        type="number"
                         name="totalCount"
                         onChange={handleOnChange}
                         value={inputs.totalCount}
                       />
+                      {errors?.totalCount && (
+                        <ErrorMessage>{errors?.totalCount}</ErrorMessage>
+                      )}
                     </FormItem>
                   </Col>
                   <Col span={24}>
                     <FormItem>
                       <Label>Available Count</Label>
                       <InputFelid
+                        type="number"
                         name="availableCount"
                         onChange={handleOnChange}
                         value={inputs.availableCount}
                       />
+                      {errors?.availableCount && (
+                        <ErrorMessage>{errors?.availableCount}</ErrorMessage>
+                      )}
                     </FormItem>
                   </Col>
                   <Col span={24}>
@@ -178,6 +228,9 @@ const Equipments = () => {
                         onChange={handleOnChange}
                         value={inputs.description}
                       />
+                      {errors?.description && (
+                        <ErrorMessage>{errors?.description}</ErrorMessage>
+                      )}
                     </FormItem>
                   </Col>
 

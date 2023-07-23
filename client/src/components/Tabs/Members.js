@@ -66,12 +66,14 @@ const Members = ({ forceRender, trainerMode }) => {
               }}
               style={{ cursor: "pointer" }}
             />
-            {userRoles.ADMIN === user?.userRole && <EditOutlined
-              onClick={() => {
-                handleEditMember(record);
-              }}
-              style={{ cursor: "pointer" }}
-            />}
+            {userRoles.ADMIN === user?.userRole && (
+              <EditOutlined
+                onClick={() => {
+                  handleEditMember(record);
+                }}
+                style={{ cursor: "pointer" }}
+              />
+            )}
           </IconWrapper>
         );
       },
@@ -85,6 +87,8 @@ const Members = ({ forceRender, trainerMode }) => {
   const handleEditMember = (member) => {
     member.dob = dayjs(member.dob);
     member.purpose = member.purpose.split(",");
+    member.weight = member.weight + "kg";
+    member.height = member.height + "cm";
     setMember(member);
     setEditMode(true);
   };
@@ -121,7 +125,12 @@ const Members = ({ forceRender, trainerMode }) => {
       ) : (
         <CustomTable dataSource={members} columns={columns} />
       )}
-      <MemberModal isModalOpen={isModalOpen} onOk={handleOk} member={member} trainerMode={trainerMode}/>
+      <MemberModal
+        isModalOpen={isModalOpen}
+        onOk={handleOk}
+        member={member}
+        trainerMode={trainerMode}
+      />
     </Container>
   );
 };
