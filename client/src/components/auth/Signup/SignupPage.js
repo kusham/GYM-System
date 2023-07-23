@@ -34,6 +34,7 @@ const SignupPage = () => {
     password: "",
     branch: "",
     purpose: [],
+    other: "",
     agree: false,
   });
   const [errors, setErrors] = useState({});
@@ -42,17 +43,19 @@ const SignupPage = () => {
   const handleSignIn = () => {
     setValidationMode(true);
     validationSchemaUserRegistration
-        .validate(inputs, { abortEarly: false })
-        .then(() => {
-          signUp(inputs, navigateToDashBoard);
-        })
-        .catch((validationErrors) => {
-          const newErrors = {};
-          validationErrors.inner.forEach((error) => {
-            newErrors[error.path] = error.message;
-          });
-          setErrors(newErrors);
+      .validate(inputs, { abortEarly: false })
+      .then(() => {
+        inputs.purpose.push(inputs.other);
+        delete inputs.other;
+        signUp(inputs, navigateToDashBoard);
+      })
+      .catch((validationErrors) => {
+        const newErrors = {};
+        validationErrors.inner.forEach((error) => {
+          newErrors[error.path] = error.message;
         });
+        setErrors(newErrors);
+      });
   };
   const navigateToDashBoard = () => {
     navigate("/auth/login", { replace: true });
@@ -200,6 +203,11 @@ const SignupPage = () => {
                 value={inputs.purpose}
                 options={preferenceOptions}
                 onChange={(value) => setInputs({ ...inputs, purpose: value })}
+              />
+              <InputFelid
+                name="other"
+                value={inputs.other}
+                onChange={handleOnChange}
               />
               {errors?.purpose && (
                 <ErrorMessage>{errors?.purpose}</ErrorMessage>
