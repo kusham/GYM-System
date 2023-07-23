@@ -6,6 +6,8 @@ import Workouts from "../Tabs/Workouts";
 import { CustomTab } from "./style";
 import AssignedWorkouts from "../Tabs/AssignedWorkouts";
 import Profile from "../Tabs/Profile";
+import EquipmentRequest from "../Tabs/EquipmentRequest";
+import Meals from "../Tabs/Meals";
 
 const MemberDashboard = () => {
   const [forceRender, setForceRender] = useState(false);
@@ -30,10 +32,22 @@ const MemberDashboard = () => {
       children: <AssignedWorkouts forceRender={forceRender} />,
     },
     {
-      key: "4",
+      key: '4',
+      label: `Equipment Requests`,
+      children: <EquipmentRequest forceRender={forceRender}/>,
+    },
+
+    {
+      key: '5',
+      label: `Meals`,
+      children: <Meals forceRender={forceRender}/>,
+    },
+    {
+      key: "6",
       label: `Profile`,
       children: <Profile setForceRender={setForceRender} />,
     },
+
   ];
   return (
     <div>

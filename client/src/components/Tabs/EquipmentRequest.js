@@ -3,18 +3,23 @@ import { CustomTable, IconWrapper } from "./style";
 import { Button } from "antd";
 import {
   acceptRequestEquipment,
+  cancelRequestEquipment,
   getEquipment,
   getRequestEquipment,
+  getRequestEquipmentByMember,
+  getRequestEquipmentByTrainer,
   rejectRequestEquipment,
 } from "../../actions/EquipmentAction";
+import { userRoles } from "../../resources/UserRoles";
 
 const EquipmentRequest = ({ forceRender }) => {
+  const user = JSON.parse(sessionStorage.getItem("profile"));
   const columns = [
     {
       title: "ID",
       dataIndex: "element",
       render: (text, record) => {
-        return record.element.id;
+        return record?.element?.id;
       },
     },
     {
@@ -25,20 +30,24 @@ const EquipmentRequest = ({ forceRender }) => {
     {
       title: "Member",
       dataIndex: "member",
-      key: "member",
+      render: (text, record) => {
+        return user?.userRole === userRoles.MEMBER
+          ? user?.fullName
+          : record?.member;
+      },
     },
     {
       title: "Count",
       dataIndex: "count",
       render: (text, record) => {
-        return record.element.count;
+        return record?.element?.count;
       },
     },
     {
       title: "Status",
       dataIndex: "status",
       render: (text, record) => {
-        return record.element.status;
+        return record?.element?.status;
       },
     },
     {
@@ -47,18 +56,29 @@ const EquipmentRequest = ({ forceRender }) => {
       render: (text, record) => {
         return (
           <IconWrapper>
-            <Button
-              onClick={() => handleAccept(record.element)}
-              style={{ background: "green" }}
-            >
-              Accept
-            </Button>
-            <Button
-              onClick={() => handleReject(record.element)}
-              style={{ background: "red" }}
-            >
-              Reject
-            </Button>
+            {user?.userRole !== userRoles.MEMBER ? (
+              <>
+                <Button
+                  onClick={() => handleAccept(record.element)}
+                  style={{ background: "green" }}
+                >
+                  Accept
+                </Button>
+                <Button
+                  onClick={() => handleReject(record.element)}
+                  style={{ background: "red" }}
+                >
+                  Reject
+                </Button>
+              </>
+            ) : (
+              <Button
+                onClick={() => handleCancel(record.element)}
+                style={{ background: "red" }}
+              >
+                Cancel
+              </Button>
+            )}
           </IconWrapper>
         );
       },
@@ -66,9 +86,14 @@ const EquipmentRequest = ({ forceRender }) => {
   ];
   const [requests, setRequests] = useState([]);
   const [rerender, setRerender] = useState(false);
-
   const handleFetchData = async () => {
-    setRequests(await getRequestEquipment());
+    if (user?.userRole === userRoles.ADMIN) {
+      setRequests(await getRequestEquipment());
+    } else if (user?.userRole === userRoles.INSTRUCTOR) {
+      setRequests(await getRequestEquipmentByTrainer(user?.userID));
+    } else if (user?.userRole === userRoles.MEMBER) {
+      setRequests(await getRequestEquipmentByMember(user?.userID));
+    }
   };
   const handleAccept = async (record) => {
     acceptRequestEquipment(record);
@@ -76,6 +101,11 @@ const EquipmentRequest = ({ forceRender }) => {
   };
   const handleReject = async (record) => {
     rejectRequestEquipment(record);
+    setRerender(!rerender);
+  };
+
+  const handleCancel = async (record) => {
+    cancelRequestEquipment(record);
     setRerender(!rerender);
   };
 
