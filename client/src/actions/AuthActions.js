@@ -134,8 +134,7 @@ export const updateUser = async (userData) => {
 export const deleteMember = async (userData) => {
   try {
     const { data } = await API.delete(
-      `/api/user/deleteMemberbyId/${userData.userID}`,
-      userData
+      `/api/user/deleteMemberbyId/${userData.userID}`
     );
     if (data.success) {
       notification.success({

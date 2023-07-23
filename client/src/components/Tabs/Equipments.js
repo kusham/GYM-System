@@ -9,11 +9,15 @@ import {
   FormContainer,
   IconWrapper,
 } from "./style";
-import { EditOutlined, EyeFilled } from "@ant-design/icons";
+import { DeleteFilled, EditOutlined, EyeFilled } from "@ant-design/icons";
 
 import { CustomForm, FormItem, InputFelid, Label } from "./style";
 import { Col, Row } from "antd";
-import { addEquipment, getEquipment } from "../../actions/EquipmentAction";
+import {
+  addEquipment,
+  getEquipment,
+  deleteEquipment,
+} from "../../actions/EquipmentAction";
 import EquipmentModal from "./Modals/EquipmentModal";
 import EquipmentEdit from "./Edit/EquipmentEdit";
 import { userRoles } from "../../resources/UserRoles";
@@ -61,6 +65,15 @@ const Equipments = () => {
                 style={{ cursor: "pointer" }}
               />
             )}
+            {(userRoles.ADMIN === user?.userRole ||
+              userRoles.INSTRUCTOR === user?.userRole) && (
+              <DeleteFilled
+                onClick={() => {
+                  handleEquipmentDelete(record);
+                }}
+                style={{ cursor: "pointer" }}
+              />
+            )}
           </IconWrapper>
         );
       },
@@ -84,6 +97,11 @@ const Equipments = () => {
   const handleEditEquipment = (equipment) => {
     setEquipment(equipment);
     setEditMode(true);
+  };
+
+  const handleEquipmentDelete = (equipment) => {
+    console.log(equipment);
+    deleteEquipment(equipment);
   };
 
   const handleViewEquipment = (equipment) => {

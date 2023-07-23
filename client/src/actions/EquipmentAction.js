@@ -62,8 +62,6 @@ export const updateEquipment = async (equipment) => {
   }
 };
 
-
-
 export const getAvailableEquipment = async () => {
   try {
     const { data } = await API.get("/api/equipment/available/getall");
@@ -158,6 +156,29 @@ export const acceptRequestEquipment = async (request) => {
     }
   } catch (error) {
     console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const deleteEquipment = async (equipmentData) => {
+  try {
+    const { data } = await API.delete(
+      `/api/equipment/delete/${equipmentData.id}`
+    );
+    if (data.success) {
+      notification.success({
+        message: "Success",
+        description: data?.message,
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
     notification.error({
       message: error?.response?.data?.message,
       description: error?.response?.data?.error,

@@ -10,11 +10,15 @@ import {
   FormContainer,
   IconWrapper,
 } from "./style";
-import { EditOutlined, EyeFilled } from "@ant-design/icons";
+import { DeleteFilled, EditOutlined, EyeFilled } from "@ant-design/icons";
 
 import { CustomForm, FormItem, InputFelid, Label } from "./style";
 import { Col, Row } from "antd";
-import { addWorkouts, getWorkouts } from "../../actions/WorkoutAction";
+import {
+  addWorkouts,
+  getWorkouts,
+  deleteWorkout,
+} from "../../actions/WorkoutAction";
 import WorkoutModal from "./Modals/WorkoutModal";
 import WorkoutEdit from "./Edit/WorkoutEdit";
 import { userRoles } from "../../resources/UserRoles";
@@ -68,6 +72,15 @@ const Workouts = () => {
                 style={{ cursor: "pointer" }}
               />
             )}
+            {(userRoles.ADMIN === user?.userRole ||
+              userRoles.INSTRUCTOR === user?.userRole) && (
+              <DeleteFilled
+                onClick={() => {
+                  delWorkout(record);
+                }}
+                style={{ cursor: "pointer" }}
+              />
+            )}
           </IconWrapper>
         );
       },
@@ -93,6 +106,11 @@ const Workouts = () => {
   const handleEditWorkout = (Workout) => {
     setWorkout(Workout);
     setEditMode(true);
+  };
+
+  const delWorkout = (Workout) => {
+    console.log(Workout);
+    deleteWorkout(Workout);
   };
 
   const handleViewWorkout = (workout) => {
@@ -135,7 +153,6 @@ const Workouts = () => {
         });
     }
   }, [inputs, validationMode]);
-
 
   const clearForm = () => {
     setInputs({
@@ -201,7 +218,9 @@ const Workouts = () => {
                         onChange={handleOnChange}
                         value={inputs.title}
                       />
-                       {errors?.title && <ErrorMessage>{errors?.title}</ErrorMessage>}
+                      {errors?.title && (
+                        <ErrorMessage>{errors?.title}</ErrorMessage>
+                      )}
                     </FormItem>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -212,7 +231,9 @@ const Workouts = () => {
                         onChange={handleOnChange}
                         value={inputs.mainGoal}
                       />
-                       {errors?.mainGoal && <ErrorMessage>{errors?.mainGoal}</ErrorMessage>}
+                      {errors?.mainGoal && (
+                        <ErrorMessage>{errors?.mainGoal}</ErrorMessage>
+                      )}
                     </FormItem>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -223,7 +244,9 @@ const Workouts = () => {
                         onChange={handleOnChange}
                         value={inputs.duration}
                       />
-                       {errors?.duration && <ErrorMessage>{errors?.duration}</ErrorMessage>}
+                      {errors?.duration && (
+                        <ErrorMessage>{errors?.duration}</ErrorMessage>
+                      )}
                     </FormItem>
                   </Col>
                 </Row>
@@ -243,7 +266,9 @@ const Workouts = () => {
                         }}
                         value={inputs.targetGender}
                       />
-                       {errors?.targetGender && <ErrorMessage>{errors?.targetGender}</ErrorMessage>}
+                      {errors?.targetGender && (
+                        <ErrorMessage>{errors?.targetGender}</ErrorMessage>
+                      )}
                     </FormItem>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -254,7 +279,9 @@ const Workouts = () => {
                         onChange={handleOnChange}
                         value={inputs.type}
                       />
-                       {errors?.type && <ErrorMessage>{errors?.type}</ErrorMessage>}
+                      {errors?.type && (
+                        <ErrorMessage>{errors?.type}</ErrorMessage>
+                      )}
                     </FormItem>
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -272,7 +299,9 @@ const Workouts = () => {
                         }}
                         value={inputs.trainingLevel}
                       />
-                       {errors?.trainingLevel && <ErrorMessage>{errors?.trainingLevel}</ErrorMessage>}
+                      {errors?.trainingLevel && (
+                        <ErrorMessage>{errors?.trainingLevel}</ErrorMessage>
+                      )}
                     </FormItem>
                   </Col>
                 </Row>
@@ -285,7 +314,9 @@ const Workouts = () => {
                         onChange={handleOnChange}
                         value={inputs.description}
                       />
-                       {errors?.description && <ErrorMessage>{errors?.description}</ErrorMessage>}
+                      {errors?.description && (
+                        <ErrorMessage>{errors?.description}</ErrorMessage>
+                      )}
                     </FormItem>
                   </Col>
                 </Row>
