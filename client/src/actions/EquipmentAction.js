@@ -121,6 +121,42 @@ export const getRequestEquipment = async () => {
   }
 };
 
+export const getRequestEquipmentByTrainer = async (userID) => {
+  try {
+    const { data } = await API.get(`/api/request/getallByTrainer/${userID}`);
+    if (data.success) {
+      console.log(data);
+      return data.requests;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const getRequestEquipmentByMember = async (userID) => {
+  try {
+    const { data } = await API.get(`/api/request/getallByMember/${userID}`);
+    if (data.success) {
+      console.log(data);
+      return data.requests;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
 export const rejectRequestEquipment = async (request) => {
   try {
     request.status = "Reject";
@@ -151,6 +187,28 @@ export const acceptRequestEquipment = async (request) => {
       notification.success({
         message: "Success",
         description: "Requests Accept Successfully.",
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
+export const cancelRequestEquipment = async (request) => {
+  try {
+    request.status = "Cancel";
+    const { data } = await API.put("/api/request/cancel", request);
+    if (data.success) {
+      notification.success({
+        message: "Success",
+        description: "Requests canceled Successfully.",
       });
       return true;
     } else {
