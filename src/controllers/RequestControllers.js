@@ -92,10 +92,21 @@ module.exports.getAllRequestsByMember = async (req, res) => {
       where: { memberId: req.params.id },
     });
 
+    let elements = [];
+    for (const element of requests) {
+      const equipment = await Equipment.findOne({
+        where: { id: element.equipmentId },
+      });
+        elements.push({
+          equipment: equipment.name,
+          element,
+        });
+    }
+
     res.status(200).json({
       success: true,
       message: "Requests fetched Successfully.",
-      requests: requests,
+      requests: elements,
     });
   } catch (error) {
     res.status(500).json({
@@ -108,36 +119,37 @@ module.exports.getAllRequestsByMember = async (req, res) => {
 
 //-------------------------get All Requests by trainer--------------------------
 module.exports.getAllRequestsByTrainer = async (req, res) => {
-    console.log("get All Requests by trainer");
-    try {
-      const requests = await UserRequest.findAll();
-  
-      let elements = [];
-      for (const element of requests) {
-        const equipment = await Equipment.findOne({
-          where: { id: element.equipmentId },
-        });
-        const member = await User.findOne({
-          where: { userID: element.memberId },
-        });
+  console.log("get All Requests by trainer");
+  try {
+    const requests = await UserRequest.findAll();
+
+    let elements = [];
+    for (const element of requests) {
+      const member = await User.findOne({
+        where: { userID: element.memberId },
+      });
+      const equipment = await Equipment.findOne({
+        where: { id: element.equipmentId },
+      });
+      if (member.instructorId && member.instructorId === req.params.id) {
         elements.push({
-          equipment: equipment.name,
           member: member.fullName,
+          equipment: equipment.name,
           element,
         });
       }
-
-
-      res.status(200).json({
-        success: true,
-        message: "Requests fetched Successfully.",
-        requests: requests,
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Requests fetch failed",
-        error: error.message,
-      });
     }
-  };
+
+    res.status(200).json({
+      success: true,
+      message: "Requests fetched Successfully.",
+      requests: elements,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Requests fetch failed",
+      error: error.message,
+    });
+  }
+};

@@ -13,6 +13,7 @@ router.post("/add", createRequest);
 router.get("/getall",getAllRequests);
 router.put("/reject/", updateRequest);
 router.put("/accept/", updateRequest);
+router.put("/cancel/", updateRequest);
 
 router.get("/getallByMember/:id",getAllRequestsByMember);
 router.get("/getallByTrainer/:id",getAllRequestsByTrainer);
