@@ -92,6 +92,7 @@ const Members = ({ forceRender, trainerMode }) => {
   const [member, setMember] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const handleEditMember = (member) => {
     member.dob = dayjs(member.dob);
@@ -105,6 +106,7 @@ const Members = ({ forceRender, trainerMode }) => {
   const handleDeleteMember = (member) => {
     console.log(member);
     deleteMember(member);
+    setRefresh(true);
   };
 
   const handleViewMember = (member) => {
@@ -116,7 +118,7 @@ const Members = ({ forceRender, trainerMode }) => {
   };
   useEffect(() => {
     if (!trainerMode) handleFetchData();
-  }, [forceRender, editMode, isModalOpen, trainerMode]);
+  }, [forceRender, editMode, isModalOpen, trainerMode, refresh]);
 
   const handleOk = () => {
     setIsModalOpen(false);

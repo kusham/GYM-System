@@ -102,6 +102,7 @@ const Workouts = () => {
     description: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const handleEditWorkout = (Workout) => {
     setWorkout(Workout);
@@ -111,6 +112,7 @@ const Workouts = () => {
   const delWorkout = (Workout) => {
     console.log(Workout);
     deleteWorkout(Workout);
+    setRefresh(true);
   };
 
   const handleViewWorkout = (workout) => {
@@ -175,7 +177,7 @@ const Workouts = () => {
 
   useEffect(() => {
     handleFetchData();
-  }, [addWorkout, editMode, isModalOpen]);
+  }, [addWorkout, editMode, isModalOpen, refresh]);
 
   const handleOk = () => {
     setIsModalOpen(false);

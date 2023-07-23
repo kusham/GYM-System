@@ -93,6 +93,7 @@ const Equipments = () => {
     description: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const handleEditEquipment = (equipment) => {
     setEquipment(equipment);
@@ -102,6 +103,7 @@ const Equipments = () => {
   const handleEquipmentDelete = (equipment) => {
     console.log(equipment);
     deleteEquipment(equipment);
+    setRefresh(true);
   };
 
   const handleViewEquipment = (equipment) => {
@@ -162,7 +164,7 @@ const Equipments = () => {
 
   useEffect(() => {
     handleFetchData();
-  }, [addEquip, editMode, isModalOpen]);
+  }, [addEquip, editMode, isModalOpen, refresh]);
 
   const handleOk = () => {
     setIsModalOpen(false);
