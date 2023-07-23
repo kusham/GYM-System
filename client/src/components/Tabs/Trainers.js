@@ -6,8 +6,8 @@ import {
   CustomTable,
   IconWrapper,
 } from "./style";
-import { getTrainers } from "../../actions/AuthActions";
-import { EditOutlined, EyeFilled } from "@ant-design/icons";
+import { getTrainers, deleteMember } from "../../actions/AuthActions";
+import { DeleteFilled, EditOutlined, EyeFilled } from "@ant-design/icons";
 import dayjs from "dayjs";
 import TrainerEdit from "./Edit/TrainerEdit";
 import TrainerModal from "./Modals/TrainerModal";
@@ -41,9 +41,9 @@ const Trainers = ({ forceRender }) => {
     {
       title: "Members Count",
       dataIndex: "memberCount",
-      render: (text, record)=> {
-        return record?.members?.length
-      }
+      render: (text, record) => {
+        return record?.members?.length;
+      },
     },
     {
       title: "Specialty",
@@ -68,6 +68,12 @@ const Trainers = ({ forceRender }) => {
               }}
               style={{ cursor: "pointer" }}
             />
+            <DeleteFilled
+              onClick={() => {
+                handledeleteatrainer(record);
+              }}
+              style={{ cursor: "pointer" }}
+            />
           </IconWrapper>
         );
       },
@@ -85,6 +91,12 @@ const Trainers = ({ forceRender }) => {
     setTrainer(trainer);
     setEditMode(true);
   };
+
+  const handledeleteatrainer = (trainer) => {
+    console.log(trainer);
+    deleteMember(trainer);
+  };
+
   const handleFetchData = async () => {
     setTrainers(await getTrainers());
   };
@@ -111,7 +123,11 @@ const Trainers = ({ forceRender }) => {
       ) : (
         <CustomTable dataSource={trainers} columns={columns} />
       )}
-      <TrainerModal isModalOpen={isModalOpen} onOk={handleOk} trainer={trainer} />
+      <TrainerModal
+        isModalOpen={isModalOpen}
+        onOk={handleOk}
+        trainer={trainer}
+      />
     </Container>
   );
 };

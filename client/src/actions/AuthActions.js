@@ -131,6 +131,29 @@ export const updateUser = async (userData) => {
   }
 };
 
+export const deleteMember = async (userData) => {
+  try {
+    const { data } = await API.delete(
+      `/api/user/deleteMemberbyId/${userData.userID}`
+    );
+    if (data.success) {
+      notification.success({
+        message: "Success",
+        description: data?.message,
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};
+
 export const assignTrainer = async (userID, instructorID) => {
   try {
     const { data } = await API.put(`/api/user/assignToInstructor`, {

@@ -9,8 +9,9 @@ import {
 import {
   getMembers,
   getMembersAssignToTrainer,
+  deleteMember,
 } from "../../actions/AuthActions";
-import { EditOutlined, EyeFilled } from "@ant-design/icons";
+import { DeleteFilled, EditOutlined, EyeFilled } from "@ant-design/icons";
 import MemberEdit from "./Edit/MemberEdit";
 import dayjs from "dayjs";
 import MemberModal from "./Modals/MemberModal";
@@ -74,6 +75,14 @@ const Members = ({ forceRender, trainerMode }) => {
                 style={{ cursor: "pointer" }}
               />
             )}
+            {userRoles.ADMIN === user?.userRole && (
+              <DeleteFilled
+                onClick={() => {
+                  handleDeleteMember(record);
+                }}
+                style={{ cursor: "pointer" }}
+              />
+            )}
           </IconWrapper>
         );
       },
@@ -92,6 +101,12 @@ const Members = ({ forceRender, trainerMode }) => {
     setMember(member);
     setEditMode(true);
   };
+
+  const handleDeleteMember = (member) => {
+    console.log(member);
+    deleteMember(member);
+  };
+
   const handleViewMember = (member) => {
     setMember(member);
     setIsModalOpen(true);
