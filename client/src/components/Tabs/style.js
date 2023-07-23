@@ -233,3 +233,12 @@ border: 1px solid red;
   font-size: 15px;
   font-family: NationalBold, Helvetica, Arial, Sans-serif;
   font-weight: 600;`;
+
+  export const ErrorMessage = styled.p`
+  color: red;
+  font-size: 13px;
+  font-family: NationalBold, Helvetica, Arial, Sans-serif;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+`;

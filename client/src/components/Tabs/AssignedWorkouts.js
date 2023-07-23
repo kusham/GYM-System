@@ -29,7 +29,7 @@ const AssignedWorkouts = ({ forceRender }) => {
       },
     },
     {
-      title: "Workout",
+      title: "Exercise",
       dataIndex: "workout",
       render: (text) => {
         return text;

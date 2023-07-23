@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col } from "antd";
 import {
   CheckBoxes,
@@ -14,6 +14,8 @@ import {
 import { registerUsers } from "../../actions/RegistrationActions";
 import { userRoles } from "../../resources/UserRoles";
 import dayjs from "dayjs";
+import { validationSchemaMemberRegistration } from "../utils/validations";
+import { ErrorMessage } from "../Tabs/style";
 
 const preferenceOptions = [
   { label: "Weight Loss", value: "Weight Loss" },
@@ -26,35 +28,67 @@ const Member = ({setForceRender}) => {
     fullName: "",
     email: "",
     nic: "",
-    dob: dayjs(new Date()),
-    gender: "male",
+    dob: "",
+    gender: "",
     mobile: "",
     password: "",
-    branch: "hikkaduwa",
+    branch: "",
     purpose: [],
     weight: "",
     height: "",
-    otherInfo: "",
   });
+  const [errors, setErrors] = useState({});
+  const [validationMode, setValidationMode] = useState(false);
   const handleRegister = () => {
-    registerUsers(inputs, userRoles.MEMBER);
-    clearForm();
-    setForceRender((prev) => !prev);
+    setValidationMode(true);
+    validationSchemaMemberRegistration
+        .validate(inputs, { abortEarly: false })
+        .then(() => {
+          registerUsers(inputs, userRoles.MEMBER);
+          clearForm();
+          setForceRender((prev) => !prev);
+          setValidationMode(false);
+          setErrors(null);
+        })
+        .catch((validationErrors) => {
+          const newErrors = {};
+          validationErrors.inner.forEach((error) => {
+            newErrors[error.path] = error.message;
+          });
+          setErrors(newErrors);
+        });
   };
+
+  useEffect(() => {
+    if (validationMode) {
+      validationSchemaMemberRegistration
+        .validate(inputs, { abortEarly: false })
+        .then(() => {
+          setErrors(null);
+        })
+        .catch((validationErrors) => {
+          const newErrors = {};
+          validationErrors.inner.forEach((error) => {
+            newErrors[error.path] = error.message;
+          });
+          setErrors(newErrors);
+        });
+    }
+  }, [inputs, validationMode]);
+
   const clearForm = () => {
     setInputs({
       fullName: "",
       email: "",
       nic: "",
-      dob: dayjs(new Date()),
-      gender: "male",
+      dob: "",
+      gender: "",
       mobile: "",
       password: "",
-      branch: "hikkaduwa",
+      branch: "",
       purpose: [],
       weight: "",
       height: "",
-      otherInfo: "",
     });
   };
   const handleOnChange = (event) => {
@@ -75,6 +109,9 @@ const Member = ({setForceRender}) => {
                 onChange={handleOnChange}
                 value={inputs.fullName}
               />
+              {errors?.fullName && (
+                <ErrorMessage>{errors?.fullName}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -85,6 +122,9 @@ const Member = ({setForceRender}) => {
                 onChange={handleOnChangeDatePicker}
                 value={inputs.dob}
               />
+              {errors?.dob && (
+                <ErrorMessage>{errors?.dob}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -101,6 +141,9 @@ const Member = ({setForceRender}) => {
                 }}
                 value={inputs.gender}
               />
+              {errors?.gender && (
+                <ErrorMessage>{errors?.gender}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -119,6 +162,9 @@ const Member = ({setForceRender}) => {
                 }}
                 value={inputs.branch}
               />
+              {errors?.branch && (
+                <ErrorMessage>{errors?.branch}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -129,6 +175,9 @@ const Member = ({setForceRender}) => {
                 onChange={handleOnChange}
                 value={inputs.mobile}
               />
+              {errors?.mobile && (
+                <ErrorMessage>{errors?.mobile}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -139,6 +188,9 @@ const Member = ({setForceRender}) => {
                 onChange={handleOnChange}
                 value={inputs.email}
               />
+              {errors?.email && (
+                <ErrorMessage>{errors?.email}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -152,16 +204,22 @@ const Member = ({setForceRender}) => {
                 onChange={handleOnChange}
                 value={inputs.nic}
               />
+              {errors?.nic && (
+                <ErrorMessage>{errors?.nic}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <FormItem>
-              <Label>Other Info</Label>
+              <Label>Weight</Label>
               <InputFelid
-                name="otherInfo"
+                name="weight"
                 onChange={handleOnChange}
-                value={inputs.otherInfo}
+                value={inputs.weight}
               />
+              {errors?.weight && (
+                <ErrorMessage>{errors?.weight}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -172,21 +230,14 @@ const Member = ({setForceRender}) => {
                 onChange={handleOnChange}
                 value={inputs.height}
               />
+              {errors?.height && (
+                <ErrorMessage>{errors?.height}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
         </Row>
 
         <Row gutter={24}>
-          <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-            <FormItem>
-              <Label>Weight</Label>
-              <InputFelid
-                name="weight"
-                onChange={handleOnChange}
-                value={inputs.weight}
-              />
-            </FormItem>
-          </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <FormItem>
               <Label>Password</Label>
@@ -195,6 +246,9 @@ const Member = ({setForceRender}) => {
                 onChange={handleOnChange}
                 value={inputs.password}
               />
+              {errors?.password && (
+                <ErrorMessage>{errors?.password}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -205,6 +259,9 @@ const Member = ({setForceRender}) => {
                 options={preferenceOptions}
                 onChange={(value) => setInputs({ ...inputs, purpose: value })}
               />
+              {errors?.purpose && (
+                <ErrorMessage>{errors?.purpose}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
         </Row>

@@ -7,6 +7,7 @@ import Member from '../Registration/Member';
 import Trainer from '../Registration/Trainer';
 import Workouts from '../Tabs/Workouts';
 import Summary from '../Tabs/Summary';
+import EquipmentRequest from '../Tabs/EquipmentRequest';
 
 
 const AdminDashboard = () => {
@@ -38,7 +39,7 @@ const AdminDashboard = () => {
     },
     {
       key: '5',
-      label: `Workouts`,
+      label: `Exercises`,
       children: <Workouts />,
     },
     {
@@ -50,6 +51,11 @@ const AdminDashboard = () => {
       key: '7',
       label: `Register Trainers`,
       children: <Trainer setForceRender={setForceRender}/>,
+    },
+    {
+      key: '8',
+      label: `Member Requests`,
+      children: <EquipmentRequest forceRender={forceRender}/>,
     },
   ];
   

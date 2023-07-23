@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col } from "antd";
 import {
   CustomDatePicker,
@@ -13,35 +13,71 @@ import {
 import { registerUsers } from "../../actions/RegistrationActions";
 import { userRoles } from "../../resources/UserRoles";
 import dayjs from "dayjs";
+import { ErrorMessage } from "../Tabs/style";
+import { validationSchemaTrainerRegistration } from "../utils/validations";
 
 const Trainer = ({ setForceRender }) => {
   const [inputs, setInputs] = useState({
     fullName: "",
     email: "",
     nic: "",
-    dob: dayjs(new Date()),
-    gender: "male",
+    dob: "",
+    gender: "",
     mobile: "",
     password: "",
-    branch: "hikkaduwa",
-    specialty: "Weight Loss",
+    branch: "",
+    specialty: "",
   });
+  const [errors, setErrors] = useState({});
+  const [validationMode, setValidationMode] = useState(false);
   const handleRegister = () => {
-    registerUsers(inputs, userRoles.INSTRUCTOR);
-    clearForm();
-    setForceRender((prev) => !prev);
+    setValidationMode(true);
+    validationSchemaTrainerRegistration
+        .validate(inputs, { abortEarly: false })
+        .then(() => {
+          registerUsers(inputs, userRoles.INSTRUCTOR);
+          clearForm();
+          setForceRender((prev) => !prev);
+          setValidationMode(false);
+          setErrors(null);
+        })
+        .catch((validationErrors) => {
+          const newErrors = {};
+          validationErrors.inner.forEach((error) => {
+            newErrors[error.path] = error.message;
+          });
+          setErrors(newErrors);
+        });
   };
+
+  useEffect(() => {
+    if (validationMode) {
+      validationSchemaTrainerRegistration
+        .validate(inputs, { abortEarly: false })
+        .then(() => {
+          setErrors(null);
+        })
+        .catch((validationErrors) => {
+          const newErrors = {};
+          validationErrors.inner.forEach((error) => {
+            newErrors[error.path] = error.message;
+          });
+          setErrors(newErrors);
+        });
+    }
+  }, [inputs, validationMode]);
+
   const clearForm = () => {
     setInputs({
       fullName: "",
       email: "",
       nic: "",
       dob: "",
-      gender: "male",
+      gender: "",
       mobile: "",
       password: "",
-      branch: "hikkaduwa",
-      specialty: "Weight Loss",
+      branch: "",
+      specialty: "",
     });
   };
   const handleOnChange = (event) => {
@@ -62,6 +98,9 @@ const Trainer = ({ setForceRender }) => {
                 onChange={handleOnChange}
                 value={inputs.fullName}
               />
+              {errors?.fullName && (
+                <ErrorMessage>{errors?.fullName}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -72,6 +111,9 @@ const Trainer = ({ setForceRender }) => {
                 onChange={handleOnChangeDatePicker}
                 value={inputs.dob}
               />
+              {errors?.dob && (
+                <ErrorMessage>{errors?.dob}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -88,6 +130,9 @@ const Trainer = ({ setForceRender }) => {
                 }}
                 value={inputs.gender}
               />
+              {errors?.gender && (
+                <ErrorMessage>{errors?.gender}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -101,6 +146,9 @@ const Trainer = ({ setForceRender }) => {
                 onChange={handleOnChange}
                 value={inputs.nic}
               />
+              {errors?.nic && (
+                <ErrorMessage>{errors?.nic}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -111,6 +159,9 @@ const Trainer = ({ setForceRender }) => {
                 onChange={handleOnChange}
                 value={inputs.mobile}
               />
+              {errors?.mobile && (
+                <ErrorMessage>{errors?.mobile}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -121,6 +172,9 @@ const Trainer = ({ setForceRender }) => {
                 onChange={handleOnChange}
                 value={inputs.email}
               />
+              {errors?.email && (
+                <ErrorMessage>{errors?.email}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
         </Row>
@@ -140,6 +194,9 @@ const Trainer = ({ setForceRender }) => {
                 }}
                 value={inputs.branch}
               />
+              {errors?.branch && (
+                <ErrorMessage>{errors?.branch}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -159,6 +216,9 @@ const Trainer = ({ setForceRender }) => {
                 }}
                 value={inputs.specialty}
               />
+              {errors?.specialty && (
+                <ErrorMessage>{errors?.specialty}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -169,6 +229,9 @@ const Trainer = ({ setForceRender }) => {
                 onChange={handleOnChange}
                 value={inputs.password}
               />
+              {errors?.password && (
+                <ErrorMessage>{errors?.password}</ErrorMessage>
+              )}
             </FormItem>
           </Col>
         </Row>

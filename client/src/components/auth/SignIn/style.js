@@ -36,3 +36,15 @@ export const ForgotPassword = styled.p`
   color: gray;
   font-family: NationalBold, Helvetica, Arial, Sans-serif;
 `;
+export const ErrorMessage = styled.p`
+  color: red;
+  font-size: 13px;
+  font-family: NationalBold, Helvetica, Arial, Sans-serif;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+`;
+
+export const InputFelidWrapper = styled.div`
+  width: 100%;
+`;

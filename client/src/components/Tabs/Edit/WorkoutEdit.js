@@ -1,19 +1,54 @@
-import React, { useState } from "react";
-import { CustomSelect, EditContainer } from "../style";
+import React, { useEffect, useState } from "react";
+import { CustomSelect, EditContainer, ErrorMessage } from "../style";
 import { CreateButton } from "../style";
 
 import { CustomForm, FormItem, InputFelid, Label } from "../style";
 import { Col, Row } from "antd";
 import { updateWorkout } from "../../../actions/WorkoutAction";
+import { workoutSchema } from "../../utils/validations";
 
 const WorkoutEdit = ({ workout, setEditMode }) => {
   const [inputs, setInputs] = useState(workout);
-  const handleUpdate = async () => {
-    const res = await updateWorkout(inputs);
-    if (res) {
-      setEditMode(false);
-    }
+  const [errors, setErrors] = useState({});
+  const [validationMode, setValidationMode] = useState(false);
+  const handleUpdate = () => {
+    setValidationMode(true);
+    workoutSchema
+      .validate(inputs, { abortEarly: false })
+      .then(async () => {
+        const res = await updateWorkout(inputs);
+        if (res) {
+          setEditMode(false);
+        }
+        setValidationMode(false);
+        setErrors(null);
+      })
+      .catch((validationErrors) => {
+        const newErrors = {};
+        validationErrors.inner.forEach((error) => {
+          newErrors[error.path] = error.message;
+        });
+        setErrors(newErrors);
+      });
   };
+
+  useEffect(() => {
+    if (validationMode) {
+      workoutSchema
+        .validate(inputs, { abortEarly: false })
+        .then(() => {
+          setErrors(null);
+        })
+        .catch((validationErrors) => {
+          const newErrors = {};
+          validationErrors.inner.forEach((error) => {
+            newErrors[error.path] = error.message;
+          });
+          setErrors(newErrors);
+        });
+    }
+  }, [inputs, validationMode]);
+
   const handleOnChange = (event) => {
     setInputs({ ...inputs, [event.target.name]: event.target.value });
   };
@@ -29,6 +64,7 @@ const WorkoutEdit = ({ workout, setEditMode }) => {
                 onChange={handleOnChange}
                 value={inputs.title}
               />
+               {errors?.title && <ErrorMessage>{errors?.title}</ErrorMessage>}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -39,6 +75,7 @@ const WorkoutEdit = ({ workout, setEditMode }) => {
                 onChange={handleOnChange}
                 value={inputs.mainGoal}
               />
+               {errors?.mainGoal && <ErrorMessage>{errors?.mainGoal}</ErrorMessage>}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -49,6 +86,7 @@ const WorkoutEdit = ({ workout, setEditMode }) => {
                 onChange={handleOnChange}
                 value={inputs.duration}
               />
+               {errors?.duration && <ErrorMessage>{errors?.duration}</ErrorMessage>}
             </FormItem>
           </Col>
         </Row>
@@ -68,6 +106,7 @@ const WorkoutEdit = ({ workout, setEditMode }) => {
                 }}
                 value={inputs.targetGender}
               />
+               {errors?.targetGender && <ErrorMessage>{errors?.targetGender}</ErrorMessage>}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -78,6 +117,7 @@ const WorkoutEdit = ({ workout, setEditMode }) => {
                 onChange={handleOnChange}
                 value={inputs.type}
               />
+               {errors?.type && <ErrorMessage>{errors?.type}</ErrorMessage>}
             </FormItem>
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
@@ -95,6 +135,7 @@ const WorkoutEdit = ({ workout, setEditMode }) => {
                 }}
                 value={inputs.trainingLevel}
               />
+               {errors?.trainingLevel && <ErrorMessage>{errors?.trainingLevel}</ErrorMessage>}
             </FormItem>
           </Col>
         </Row>
@@ -107,6 +148,7 @@ const WorkoutEdit = ({ workout, setEditMode }) => {
                 onChange={handleOnChange}
                 value={inputs.description}
               />
+               {errors?.description && <ErrorMessage>{errors?.description}</ErrorMessage>}
             </FormItem>
           </Col>
         </Row>

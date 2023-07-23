@@ -7,6 +7,8 @@ const API = axios.create({ baseURL: "http://localhost:5000" });
 export const registerUsers = async (userData, userRole) => {
   try {
     userData.dob = userData.dob.toString();
+    userData.weight = userData?.weight?.replace(/kg$/i, "");
+    userData.height = userData?.height?.replace(/cm$/i, "");
     if (userRole === userRoles.MEMBER)
       userData.purpose = userData.purpose.join(", ");
     userData.userRole = userRole;

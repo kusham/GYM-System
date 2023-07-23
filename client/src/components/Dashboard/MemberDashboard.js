@@ -26,7 +26,7 @@ const MemberDashboard = () => {
     },
     {
       key: "3",
-      label: `Assigned Workout`,
+      label: `Assigned Exercise`,
       children: <AssignedWorkouts forceRender={forceRender} />,
     },
     {

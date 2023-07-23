@@ -39,6 +39,13 @@ const Trainers = ({ forceRender }) => {
       key: "nic",
     },
     {
+      title: "Members Count",
+      dataIndex: "memberCount",
+      render: (text, record)=> {
+        return record?.members?.length
+      }
+    },
+    {
       title: "Specialty",
       dataIndex: "specialty",
       key: "specialty",
@@ -73,6 +80,8 @@ const Trainers = ({ forceRender }) => {
 
   const handleEditTrainer = (trainer) => {
     trainer.dob = dayjs(trainer.dob);
+    trainer.weight = trainer.weight + "kg";
+    trainer.height = trainer.height + "cm";
     setTrainer(trainer);
     setEditMode(true);
   };

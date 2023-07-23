@@ -4,7 +4,7 @@ import React from "react";
 const WorkoutModal = ({ isModalOpen, onOk, workout }) => {
   return (
     <Modal
-      title="Workout Details"
+      title="Exercise Details"
       cancelButtonProps={{ style: { display: "none" } }}
       open={isModalOpen}
       onOk={onOk}

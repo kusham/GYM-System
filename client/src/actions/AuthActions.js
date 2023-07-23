@@ -9,6 +9,7 @@ export const login = async (credentials, navigateToDashBoard) => {
     const { data } = await API.post("/api/user/login", credentials);
     if (data.success) {
       sessionStorage.setItem("user", JSON.stringify(data?.user?.userID));
+      data.user.purpose = data?.user?.purpose?.split(",");
       sessionStorage.setItem("profile", JSON.stringify(data?.user));
       sessionStorage.setItem("userRole", JSON.stringify(data?.user?.userRole));
       notification.success({
@@ -28,7 +29,6 @@ export const login = async (credentials, navigateToDashBoard) => {
 
 export const signUp = async (userData, navigateToLogin) => {
   try {
-    userData.dob = userData.dob.toString();
     userData.purpose = userData.purpose.join(", ");
     userData.userRole = "Member";
 
@@ -83,11 +83,12 @@ export const getMembers = async () => {
   }
 };
 
-
 export const getMembersAssignToTrainer = async () => {
   try {
     const id = JSON.parse(sessionStorage.getItem("user"));
-    const { data } = await API.get(`/api/user/getMembersAssignToInstructor/${id}`);
+    const { data } = await API.get(
+      `/api/user/getMembersAssignToInstructor/${id}`
+    );
     if (data.success) {
       return data.members;
     } else {
@@ -104,7 +105,10 @@ export const getMembersAssignToTrainer = async () => {
 
 export const updateUser = async (userData) => {
   try {
-    // userData.purpose = userData?.purpose?.join(", ");
+    console.log(userData);
+    userData.purpose = userData?.purpose?.join(", ");
+    userData.weight = userData?.weight?.replace(/kg$/i, "");
+    userData.height = userData?.height?.replace(/cm$/i, "");
     const { data } = await API.put(
       `/api/user/updateUser/${userData.userID}`,
       userData
@@ -127,12 +131,12 @@ export const updateUser = async (userData) => {
   }
 };
 
-
 export const assignTrainer = async (userID, instructorID) => {
   try {
-    const { data } = await API.put(
-      `/api/user/assignToInstructor`, {userID, instructorID}
-    );
+    const { data } = await API.put(`/api/user/assignToInstructor`, {
+      userID,
+      instructorID,
+    });
     if (data.success) {
       notification.success({
         message: "Success",
@@ -153,9 +157,7 @@ export const assignTrainer = async (userID, instructorID) => {
 
 export const getMemberByID = async (userID) => {
   try {
-    const { data } = await API.get(
-      `/api/user/getMemberById/${userID}`
-    );
+    const { data } = await API.get(`/api/user/getMemberById/${userID}`);
     if (data.success) {
       return data?.member;
     } else {
@@ -172,9 +174,7 @@ export const getMemberByID = async (userID) => {
 
 export const getTrainerByID = async (userID) => {
   try {
-    const { data } = await API.get(
-      `/api/user/getInstructorById/${userID}`
-    );
+    const { data } = await API.get(`/api/user/getInstructorById/${userID}`);
     if (data.success) {
       return data?.instructor;
     } else {
@@ -191,9 +191,7 @@ export const getTrainerByID = async (userID) => {
 
 export const getUserCountForRoles = async () => {
   try {
-    const { data } = await API.get(
-      `/api/user/getUserCountForRoles`
-    );
+    const { data } = await API.get(`/api/user/getUserCountForRoles`);
     if (data.success) {
       return data?.count;
     } else {
@@ -210,9 +208,7 @@ export const getUserCountForRoles = async () => {
 
 export const getNewRegistrants = async () => {
   try {
-    const { data } = await API.get(
-      `/api/user/getNewRegistrants`
-    );
+    const { data } = await API.get(`/api/user/getNewRegistrants`);
     if (data.success) {
       return data?.members;
     } else {
