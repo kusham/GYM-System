@@ -253,8 +253,6 @@ module.exports.assignToInstructor = async (req, res) => {
   }
 };
 
-
-
 //-------------------------get Members Assign To the Instructor--------------------------
 module.exports.getMembersAssignToInstructor = async (req, res) => {
   console.log("get Members Assign To the Instructor");
@@ -284,6 +282,34 @@ module.exports.getMembersAssignToInstructor = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "members fetch failed",
+      error: error.message,
+    });
+  }
+};
+
+//-------------------------delete member by id--------------------------
+module.exports.deleteMember = async (req, res) => {
+  console.log("delete member");
+  try {
+    const result = await User.destroy({
+      where: { userID: req.params.id },
+    });
+
+    if (result[0] == 1) {
+      res.status(200).json({
+        success: true,
+        message: "Member deleted Successfully.",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: "Member delete failed.",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Member delete failed",
       error: error.message,
     });
   }
