@@ -18,10 +18,4 @@ router.put("/cancel/", updateRequest);
 router.get("/getallByMember/:id",getAllRequestsByMember);
 router.get("/getallByTrainer/:id",getAllRequestsByTrainer);
 
-
-// router.delete("/delete/:id", deleteEquipmentById);
-// router.get("/getById/:id", getEquipmentById);
-// router.get("/available/getall", getAvailableEquipment);
-
-
 module.exports = router;
