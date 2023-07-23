@@ -295,7 +295,7 @@ module.exports.deleteMember = async (req, res) => {
       where: { userID: req.params.id },
     });
 
-    if (result[0] == 1) {
+    if (result == 1) {
       res.status(200).json({
         success: true,
         message: "Member deleted Successfully.",
