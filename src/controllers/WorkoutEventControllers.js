@@ -110,7 +110,6 @@ module.exports.getAllWorkoutsEventsByInstructor = async (req, res) => {
     const workoutsEvents = await WorkoutEvent.findAll({
       where: { trainerId: req.params.id }
     });
-    console.log(workoutsEvents);
     let elements = []
     for (const element of workoutsEvents) {
         const workout = await Workout.findOne({where: {id: element.workoutId}})

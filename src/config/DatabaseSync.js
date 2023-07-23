@@ -5,6 +5,7 @@ const User = require("../models/UserModel");
 const Workout = require("../models/WorkoutModel");
 const Equipment = require("../models/EquipmentModel");
 const WorkoutEvent = require("../models/WorkoutEventModel");
+const UserRequest = require("../models/UserRequests");
 
 const runSeeders = require("./seeders");
 

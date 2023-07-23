@@ -1,6 +1,8 @@
 const Sequelize = require("sequelize");
 
 const db = require("../config/DatabaseConnection");
+const UserRequest = require("./UserRequests");
+const WorkoutEvent = require("./WorkoutEventModel");
 // Define a model
 var Equipment = db.define(
   "equipment",
@@ -26,5 +28,6 @@ var Equipment = db.define(
     freezeTableName: true,
   }
 );
+
 
 module.exports = Equipment;

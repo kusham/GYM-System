@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 
 const db = require("../config/DatabaseConnection");
 const WorkoutEvent = require("./WorkoutEventModel");
+const UserRequest = require("./UserRequests");
 // Define a model
 var User = db.define(
   "user",
@@ -101,4 +102,5 @@ User.hasMany(WorkoutEvent, {
   as: 'trainerEvents',
 });
 
+User.hasMany(UserRequest, { as: 'memberRequest', foreignKey: 'memberId' });
 module.exports = User;

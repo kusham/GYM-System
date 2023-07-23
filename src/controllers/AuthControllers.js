@@ -125,7 +125,7 @@ module.exports.updateUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "User Registration failed",
+      message: "User Update failed",
       error: error.message,
     });
   }

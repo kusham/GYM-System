@@ -13,6 +13,7 @@ var userRoutes = require("./src/routes/UserRoutes");
 var workoutRoutes = require("./src/routes/WorkoutRoutes");
 var equipmentRoutes = require("./src/routes/EquipmentRoutes");
 var events = require("./src/routes/WorkoutEventRoutes");
+var request = require("./src/routes/UserRequestRoutes");
 
 
 
@@ -33,6 +34,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/workout", workoutRoutes);
 app.use("/api/equipment", equipmentRoutes);
 app.use("/api/event", events);
+app.use("/api/request", request);
 
 
 app.listen(port, () => {
