@@ -60,6 +60,31 @@ module.exports.getAllRequests = async (req, res) => {
 module.exports.updateRequest = async (req, res) => {
   console.log("update Request");
   try {
+    const equipment = await Equipment.findOne({
+      where: { id: req.body.equipmentId },
+    });
+    if (req.body.status === "Accept") {
+      if (equipment.availableCount - req.body.count >= 0) {
+        await Equipment.update(
+          { availableCount: equipment.availableCount - req.body.count },
+          {
+            where: { id: req.body.equipmentId },
+          }
+        );
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: "Not enough equipment available.",
+        });
+      }
+    } else if (req.body.status === "Released") {
+      await Equipment.update(
+        { availableCount: equipment.availableCount + req.body.count },
+        {
+          where: { id: req.body.equipmentId },
+        }
+      );
+    }
     const result = await UserRequest.update(req.body, {
       where: { id: req.body.id },
     });
@@ -97,10 +122,10 @@ module.exports.getAllRequestsByMember = async (req, res) => {
       const equipment = await Equipment.findOne({
         where: { id: element.equipmentId },
       });
-        elements.push({
-          equipment: equipment.name,
-          element,
-        });
+      elements.push({
+        equipment: equipment.name,
+        element,
+      });
     }
 
     res.status(200).json({

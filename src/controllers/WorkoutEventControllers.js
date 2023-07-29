@@ -6,8 +6,11 @@ const Workout = require("../models/WorkoutModel");
 //-------------------------create new workout Event--------------------------
 module.exports.createWorkoutEvent = async (req, res) => {
   console.log("create a workout Event");
+  console.log(req.body);
+  let event = req.body;
+  event.workoutId = event.workoutId.map((item)=> item.id).join(', ');
   try {
-    const newWorkoutEvent = new WorkoutEvent(req.body);
+    const newWorkoutEvent = new WorkoutEvent(event);
 
     const savedWorkoutEvent = await WorkoutEvent.create(
       newWorkoutEvent.dataValues
@@ -112,10 +115,18 @@ module.exports.getAllWorkoutsEventsByInstructor = async (req, res) => {
     });
     let elements = []
     for (const element of workoutsEvents) {
-        const workout = await Workout.findOne({where: {id: element.workoutId}})
+      let workouts = []
+      element.workoutId =  element?.workoutId?.split(',');
+        if (element?.workoutId?.length > 0) {
+          element?.workoutId.map(async item => {
+             const workout = await Workout.findOne({where: {id: parseInt(item.trim(), 10)}})
+             workouts.push(workout.title)
+           })
+          
+        }
         const equipment = await Equipment.findOne({where: {id: element.equipmentId}})
         const member = await User.findOne({where: {userID: element.memberId}})
-        elements.push({workout: workout.title, equipment: equipment.name, member: member.fullName, element})
+        elements.push({workout: workouts, equipment: equipment.name, member: member.fullName, element})
     };
 
     res.status(200).json({
@@ -142,10 +153,18 @@ module.exports.getAllWorkoutsEventsByMember = async (req, res) => {
       });
       let elements = []
       for (const element of workoutsEvents) {
-          const workout = await Workout.findOne({where: {id: element.workoutId}})
+        let workouts = []
+        element.workoutId =  element?.workoutId?.split(',');
+          if (element?.workoutId?.length > 0) {
+            element?.workoutId.map(async item => {
+               const workout = await Workout.findOne({where: {id: parseInt(item.trim(), 10)}})
+               workouts.push(workout.title)
+             })
+            
+          }
           const equipment = await Equipment.findOne({where: {id: element.equipmentId}})
           const instructor = await User.findOne({where: {userID: element.trainerId}})
-          elements.push({workout: workout.title, equipment: equipment.name, member: instructor.fullName, element})
+          elements.push({workout: workouts, equipment: equipment.name, member: instructor.fullName, element})
       };
   
       res.status(200).json({
