@@ -184,8 +184,8 @@ export const RateTitle = styled.p`
 `;
 
 export const Circle = styled.div`
-  width: 300px;
-  height: 300px;
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
   background-color: orange;
   display: flex;
