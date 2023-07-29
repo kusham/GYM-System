@@ -39,7 +39,7 @@ const MemberDashboard = () => {
 
     {
       key: '5',
-      label: `Meals`,
+      label: `Calory`,
       children: <Meals forceRender={forceRender}/>,
     },
     {

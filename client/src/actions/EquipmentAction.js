@@ -244,3 +244,24 @@ export const cancelRequestEquipment = async (request) => {
     });
   }
 };
+
+export const deleteRequestEquipment = async (request) => {
+  try {
+    const { data } = await API.delete(`/api/request/delete/${request.id}`);
+    if (data.success) {
+      notification.success({
+        message: "Success",
+        description: "Equipment Deleted Successfully.",
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error.response.data);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};

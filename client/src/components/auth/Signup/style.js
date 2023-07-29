@@ -15,6 +15,7 @@ export const InputFelid = styled(Input)`
   background: #505c55;
   height: 45px;
   width: 100%;
+  color: white;
 `;
 
 export const CustomDatePicker = styled(DatePicker)`

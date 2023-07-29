@@ -23,8 +23,8 @@ export const AuthButtons = styled.div`
 `;
 export const LoginButton = styled(Button)`
   border-radius: 73px;
-  width: 245px;
-  height: 89px;
+  width: 215px;
+  height: 59px;
   background-color: #ffa500;
   border: 1px solid black;
   color: black;
@@ -33,8 +33,8 @@ export const LoginButton = styled(Button)`
   font-family: NationalBold, Helvetica, Arial, Sans-serif;
 `;
 export const SignUpButton = styled(Button)`
-  width: 245px;
-  height: 89px;
+  width: 215px;
+  height: 59px;
   border-radius: 73px;
   background-color: white;
   border: 1px solid black;

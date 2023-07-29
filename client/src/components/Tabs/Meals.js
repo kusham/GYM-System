@@ -1,5 +1,12 @@
-import React, { useState } from "react";
-import { Container, CustomSelect, FormItem, InputFelid, Label } from "./style";
+import React, { useEffect, useState } from "react";
+import {
+  Container,
+  CustomSelect,
+  ErrorMessage,
+  FormItem,
+  InputFelid,
+  Label,
+} from "./style";
 import { Button, Col, Row, Tag } from "antd";
 import { calAge, calCalory } from "../utils/CalculateCalery";
 const options = [
@@ -9,15 +16,26 @@ const options = [
   { label: "Very active", value: "Very active" },
   { label: "Extra active", value: "Extra active" },
 ];
-const Meals = () => {
+const Meals = ({ forceRender }) => {
   const user = JSON.parse(sessionStorage.getItem("profile"));
   const [input, setInput] = useState("");
+  const [error, setError] = useState(false);
   const [calVal, setCalVal] = useState("");
   const handleCalCalory = () => {
-    setCalVal(
-      calCalory(user.gender, user.dob, user.weight, user.height, input)
-    );
+    if (user?.weight !== null && user?.height !== null) {
+      setCalVal(
+        calCalory(user.gender, user.dob, user.weight, user.height, input)
+      );
+    } else {
+      setError(true);
+    }
   };
+
+  useEffect(() => {
+    setError(false);
+    setInput("");
+  }, [forceRender]);
+
   return (
     <Container style={{ padding: "0px 100px" }}>
       <Row gutter={48}>
@@ -116,6 +134,13 @@ const Meals = () => {
           </Tag>
         )}
       </Row>
+      {error && (
+        <Row justify="center" align="center">
+          <ErrorMessage style={{ fontSize: "30px", width: "fit-content" }}>
+            You have to update height and weight before calculate the calory.
+          </ErrorMessage>
+        </Row>
+      )}
     </Container>
   );
 };
