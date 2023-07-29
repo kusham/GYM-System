@@ -83,6 +83,7 @@ const Trainers = ({ forceRender }) => {
   const [trainer, setTrainer] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const handleEditTrainer = (trainer) => {
     trainer.dob = dayjs(trainer.dob);
@@ -95,6 +96,7 @@ const Trainers = ({ forceRender }) => {
   const handledeleteatrainer = (trainer) => {
     console.log(trainer);
     deleteMember(trainer);
+    setRefresh(true);
   };
 
   const handleFetchData = async () => {
@@ -107,7 +109,7 @@ const Trainers = ({ forceRender }) => {
 
   useEffect(() => {
     handleFetchData();
-  }, [forceRender, editMode]);
+  }, [forceRender, editMode, refresh]);
   const handleOk = () => {
     setIsModalOpen(false);
   };

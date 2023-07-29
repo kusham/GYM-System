@@ -93,6 +93,7 @@ const Equipments = ({forceRender}) => {
     description: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const handleEditEquipment = (equipment) => {
     setEquipment(equipment);
@@ -102,6 +103,7 @@ const Equipments = ({forceRender}) => {
   const handleEquipmentDelete = (equipment) => {
     console.log(equipment);
     deleteEquipment(equipment);
+    setRefresh(true);
   };
 
   const handleViewEquipment = (equipment) => {
