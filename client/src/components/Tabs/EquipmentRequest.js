@@ -56,7 +56,8 @@ const EquipmentRequest = ({ forceRender }) => {
       render: (text, record) => {
         return (
           <IconWrapper>
-            {user?.userRole !== userRoles.MEMBER ? (
+            {user?.userRole !== userRoles.MEMBER &&
+            record.element.status !== "Released" ? (
               <>
                 <Button
                   onClick={() => handleAccept(record.element)}
@@ -72,12 +73,14 @@ const EquipmentRequest = ({ forceRender }) => {
                 </Button>
               </>
             ) : (
-              <Button
-                onClick={() => handleCancel(record.element)}
-                style={{ background: "red" }}
-              >
-                Cancel
-              </Button>
+              record.element.status === "Accept" && (
+                <Button
+                  onClick={() => handleRelease(record.element)}
+                  style={{ background: "blue" }}
+                >
+                  Release
+                </Button>
+              )
             )}
           </IconWrapper>
         );
@@ -104,7 +107,7 @@ const EquipmentRequest = ({ forceRender }) => {
     setRerender(!rerender);
   };
 
-  const handleCancel = async (record) => {
+  const handleRelease = async (record) => {
     cancelRequestEquipment(record);
     setRerender(!rerender);
   };

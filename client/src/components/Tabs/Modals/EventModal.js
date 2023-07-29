@@ -1,10 +1,11 @@
-import { Checkbox, Descriptions, Modal, Row } from "antd";
+import { Checkbox, Descriptions, Modal, Row, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   AssignButton,
   CheckBoxes,
   MakingTitle,
   MarkingContainer,
+  TagContainer,
 } from "../style";
 import { markAttendance } from "../../../actions/WorkoutEventAction";
 import { userRoles } from "../../../resources/UserRoles";
@@ -36,6 +37,8 @@ const EventModal = ({ isModalOpen, onOk, event }) => {
 
   const handleAttendance = () => {
     const newValue = event?.element;
+    console.log(newValue);
+    newValue.workoutId = newValue.workoutId.join(' ,')
     if (newValue.completedSessions === null) {
       newValue.completedSessions = checkedValues.length;
     } else {
@@ -67,9 +70,6 @@ const EventModal = ({ isModalOpen, onOk, event }) => {
         <Descriptions.Item label="Member Full Name">
           {event?.member ? event?.member : "--"}
         </Descriptions.Item>
-        <Descriptions.Item label="Workout">
-          {event?.workout ? event?.workout : "--"}
-        </Descriptions.Item>
         <Descriptions.Item label="Description">
           {event?.description ? event?.description : "--"}
         </Descriptions.Item>
@@ -84,18 +84,33 @@ const EventModal = ({ isModalOpen, onOk, event }) => {
             : "0"}
         </Descriptions.Item>
       </Descriptions>
+      <MakingTitle style={{marginBottom: '5px'}}>Workouts</MakingTitle>
+      <TagContainer>
+        {event?.workout?.length > 0 &&
+          event?.workout?.map((item) => (
+            <Tag color="success" style={{ width: "fit-content" }}>
+              {item}
+            </Tag>
+          ))}
+      </TagContainer>
       <MarkingContainer>
         <MakingTitle>Mark Attendance</MakingTitle>
         <Row>
-          <CheckBoxes onChange={handleOnChange} value={checkedValues} disabled={userRoles.MEMBER === user?.userRole}>
+          <CheckBoxes
+            onChange={handleOnChange}
+            value={checkedValues}
+            disabled={userRoles.MEMBER === user?.userRole}
+          >
             {checkboxOptions().map((option, index) => (
               <Checkbox key={index} value={option}></Checkbox>
             ))}
           </CheckBoxes>
         </Row>
-        {userRoles.INSTRUCTOR === user?.userRole && <Row justify={"end"}>
-          <AssignButton onClick={handleAttendance}>Update</AssignButton>
-        </Row>}
+        {userRoles.INSTRUCTOR === user?.userRole && (
+          <Row justify={"end"}>
+            <AssignButton onClick={handleAttendance}>Update</AssignButton>
+          </Row>
+        )}
       </MarkingContainer>
     </Modal>
   );

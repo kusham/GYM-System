@@ -6,7 +6,6 @@ const API = axios.create({ baseURL: "http://localhost:5000" });
 export const addWorkoutEvents = async (userID, inputData) => {
   try {
     inputData.memberId = userID;
-    console.log(inputData);
     const { data } = await API.post("/api/event/add", inputData);
     if (data.success) {
       notification.success({

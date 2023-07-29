@@ -225,20 +225,28 @@ export const LogoutWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-export const LogoutButton = styled(Button)`  
-border: 1px solid red;
+export const LogoutButton = styled(Button)`
+  border: 1px solid red;
   border-radius: 5px;
   height: auto;
   background: red;
   font-size: 15px;
   font-family: NationalBold, Helvetica, Arial, Sans-serif;
-  font-weight: 600;`;
+  font-weight: 600;
+`;
 
-  export const ErrorMessage = styled.p`
+export const ErrorMessage = styled.p`
   color: red;
   font-size: 13px;
   font-family: NationalBold, Helvetica, Arial, Sans-serif;
   display: flex;
   justify-content: flex-start;
   width: 100%;
+`;
+
+export const TagContainer = styled.p`
+  display: flex;
+  font-family: NationalBold, Helvetica, Arial, Sans-serif;
+  flex-wrap: wrap;
+  gap: 5px;
 `;

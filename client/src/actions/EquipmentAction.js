@@ -225,12 +225,12 @@ export const deleteEquipment = async (equipmentData) => {
 
 export const cancelRequestEquipment = async (request) => {
   try {
-    request.status = "Cancel";
+    request.status = "Released";
     const { data } = await API.put("/api/request/cancel", request);
     if (data.success) {
       notification.success({
         message: "Success",
-        description: "Requests canceled Successfully.",
+        description: "Equipment Released Successfully.",
       });
       return true;
     } else {

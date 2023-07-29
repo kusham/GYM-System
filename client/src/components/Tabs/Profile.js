@@ -26,6 +26,7 @@ import dayjs from "dayjs";
 import { RegisterButton } from "../Registration/style";
 import { updateUser } from "../../actions/AuthActions";
 import { validationSchemaUserProfile } from "../utils/validations";
+import { userRoles } from "../../resources/UserRoles";
 
 const preferenceOptions = [
   { label: "Weight Loss", value: "Weight Loss" },
@@ -163,18 +164,22 @@ const Profile = () => {
                 <Data>{profile.purpose}</Data>
               </DataItem>
             </Col>
-            <Col sm={24} md={8} lg={6}>
-              <DataItem>
-                <DataTitle>Weight : </DataTitle>
-                <Data>{profile.weight} kg</Data>
-              </DataItem>
-            </Col>
-            <Col sm={24} md={8} lg={6}>
-              <DataItem>
-                <DataTitle>Height : </DataTitle>
-                <Data>{profile.height} cm</Data>
-              </DataItem>
-            </Col>
+            {profile?.userRole === userRoles.MEMBER && (
+              <>
+                <Col sm={24} md={8} lg={6}>
+                  <DataItem>
+                    <DataTitle>Weight : </DataTitle>
+                    <Data>{profile.weight} kg</Data>
+                  </DataItem>
+                </Col>
+                <Col sm={24} md={8} lg={6}>
+                  <DataItem>
+                    <DataTitle>Height : </DataTitle>
+                    <Data>{profile.height} cm</Data>
+                  </DataItem>
+                </Col>
+              </>
+            )}
           </Row>
           <LogoutWrapper>
             <LogoutButton onClick={handleLogout}>Log out</LogoutButton>
@@ -288,61 +293,104 @@ const Profile = () => {
                   {errors?.nic && <ErrorMessage>{errors?.nic}</ErrorMessage>}
                 </FormItem>
               </Col>
-              <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-                <FormItem>
-                  <Label>Weight</Label>
-                  <InputFelid
-                    name="weight"
-                    onChange={handleOnChange}
-                    value={profile.weight}
-                  />
-                  {errors?.weight && (
-                    <ErrorMessage>{errors?.weight}</ErrorMessage>
-                  )}
-                </FormItem>
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-                <FormItem>
-                  <Label>Height</Label>
-                  <InputFelid
-                    name="height"
-                    onChange={handleOnChange}
-                    value={profile.height}
-                  />
-                  {errors?.height && (
-                    <ErrorMessage>{errors?.height}</ErrorMessage>
-                  )}
-                </FormItem>
-              </Col>
+              {profile?.userRole === userRoles.MEMBER && (
+                <>
+                  <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                    <FormItem>
+                      <Label>Weight</Label>
+                      <InputFelid
+                        name="weight"
+                        onChange={handleOnChange}
+                        value={profile.weight}
+                      />
+                      {errors?.weight && (
+                        <ErrorMessage>{errors?.weight}</ErrorMessage>
+                      )}
+                    </FormItem>
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                    <FormItem>
+                      <Label>Height</Label>
+                      <InputFelid
+                        name="height"
+                        onChange={handleOnChange}
+                        value={profile.height}
+                      />
+                      {errors?.height && (
+                        <ErrorMessage>{errors?.height}</ErrorMessage>
+                      )}
+                    </FormItem>
+                  </Col>
+                </>
+              )}
+
+              {profile?.userRole === userRoles.INSTRUCTOR && (
+                <>
+                  <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                    <FormItem>
+                      <Label>City</Label>
+                      <InputFelid
+                        name="city"
+                        onChange={handleOnChange}
+                        value={profile.city}
+                      />
+                      {errors?.city && (
+                        <ErrorMessage>{errors?.city}</ErrorMessage>
+                      )}
+                    </FormItem>
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                    <FormItem>
+                      <Label>Preference</Label>
+                      <CheckBoxes
+                        value={profile.purpose}
+                        options={preferenceOptions}
+                        onChange={(value) =>
+                          setProfile({ ...profile, purpose: value })
+                        }
+                      />
+                      {errors?.purpose && (
+                        <ErrorMessage>{errors?.purpose}</ErrorMessage>
+                      )}
+                    </FormItem>
+                  </Col>
+                </>
+              )}
             </Row>
 
             <Row gutter={24}>
-              <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-                <FormItem>
-                  <Label>City</Label>
-                  <InputFelid
-                    name="city"
-                    onChange={handleOnChange}
-                    value={profile.city}
-                  />
-                  {errors?.city && <ErrorMessage>{errors?.city}</ErrorMessage>}
-                </FormItem>
-              </Col>
-              <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-                <FormItem>
-                  <Label>Preference</Label>
-                  <CheckBoxes
-                    value={profile.purpose}
-                    options={preferenceOptions}
-                    onChange={(value) =>
-                      setProfile({ ...profile, purpose: value })
-                    }
-                  />
-                  {errors?.purpose && (
-                    <ErrorMessage>{errors?.purpose}</ErrorMessage>
-                  )}
-                </FormItem>
-              </Col>
+              {profile?.userRole === userRoles.MEMBER && (
+                <>
+                  <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                    <FormItem>
+                      <Label>City</Label>
+                      <InputFelid
+                        name="city"
+                        onChange={handleOnChange}
+                        value={profile.city}
+                      />
+                      {errors?.city && (
+                        <ErrorMessage>{errors?.city}</ErrorMessage>
+                      )}
+                    </FormItem>
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                    <FormItem>
+                      <Label>Preference</Label>
+                      <CheckBoxes
+                        value={profile.purpose}
+                        options={preferenceOptions}
+                        onChange={(value) =>
+                          setProfile({ ...profile, purpose: value })
+                        }
+                      />
+                      {errors?.purpose && (
+                        <ErrorMessage>{errors?.purpose}</ErrorMessage>
+                      )}
+                    </FormItem>
+                  </Col>
+                </>
+              )}
             </Row>
 
             <FormItem style={{ alignItems: "center" }}>

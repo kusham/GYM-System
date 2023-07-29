@@ -24,7 +24,7 @@ const MemberDashboard = () => {
     {
       key: "2",
       label: `Equipments`,
-      children: <Equipments />,
+      children: <Equipments forceRender={forceRender}/>,
     },
     {
       key: "3",
