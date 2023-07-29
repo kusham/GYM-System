@@ -24,9 +24,6 @@ const TrainerModal = ({ isModalOpen, onOk, trainer }) => {
         <Descriptions.Item label="Mobile">
           {trainer?.mobile ? trainer?.mobile : "--"}
         </Descriptions.Item>
-        <Descriptions.Item label="Trainer">
-          {trainer?.instructor ? trainer?.instructor?.fullName : "--"}
-        </Descriptions.Item>
         <Descriptions.Item label="Birthday">
           {trainer?.dob ? new Date(trainer?.dob).toDateString() : "--"}
         </Descriptions.Item>
@@ -41,6 +38,9 @@ const TrainerModal = ({ isModalOpen, onOk, trainer }) => {
         </Descriptions.Item>
         <Descriptions.Item label="Personal Info">
           {trainer?.personalInfo ? trainer?.personalInfo : "--"}
+        </Descriptions.Item>
+        <Descriptions.Item label="">
+           
         </Descriptions.Item>
         <Descriptions.Item label="Members">
             {trainer?.members?.length === 0 && '--'}

@@ -35,7 +35,7 @@ const AdminDashboard = () => {
     {
       key: '4',
       label: `Equipments`,
-      children: <Equipments />,
+      children: <Equipments forceRender={forceRender}/>,
     },
     {
       key: '5',

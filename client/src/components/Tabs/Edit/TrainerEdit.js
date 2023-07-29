@@ -180,7 +180,7 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
               />
             </FormItem>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+          {/* <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <FormItem>
               <Label>Weight</Label>
               <InputFelid
@@ -190,20 +190,7 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
               />
               {errors?.weight && <ErrorMessage>{errors?.weight}</ErrorMessage>}
             </FormItem>
-          </Col>
-        </Row>
-        <Row gutter={24}>
-          <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-            <FormItem>
-              <Label>Height</Label>
-              <InputFelid
-                name="height"
-                onChange={handleOnChange}
-                value={inputs.height}
-              />
-              {errors?.height && <ErrorMessage>{errors?.height}</ErrorMessage>}
-            </FormItem>
-          </Col>
+          </Col> */}
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <FormItem>
               <Label>City</Label>
@@ -215,6 +202,20 @@ const TrainerEdit = ({ trainer, setEditMode }) => {
             </FormItem>
           </Col>
         </Row>
+        {/* <Row gutter={24}> */}
+          {/* <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+            <FormItem>
+              <Label>Height</Label>
+              <InputFelid
+                name="height"
+                onChange={handleOnChange}
+                value={inputs.height}
+              />
+              {errors?.height && <ErrorMessage>{errors?.height}</ErrorMessage>}
+            </FormItem>
+          </Col> */}
+          
+        {/* </Row> */}
 
         <FormItem style={{ alignItems: "center" }}>
           <CreateButton type="primary" htmlType="submit" onClick={handleUpdate}>

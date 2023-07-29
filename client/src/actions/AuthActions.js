@@ -106,7 +106,8 @@ export const getMembersAssignToTrainer = async () => {
 export const updateUser = async (userData) => {
   try {
     console.log(userData);
-    userData.purpose = userData?.purpose?.join(", ");
+    if (userData.userRole === "Member")
+      userData.purpose = userData?.purpose?.join(", ");
     userData.weight = userData?.weight?.replace(/kg$/i, "");
     userData.height = userData?.height?.replace(/cm$/i, "");
     const { data } = await API.put(

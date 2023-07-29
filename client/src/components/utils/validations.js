@@ -90,7 +90,7 @@ export const validationSchemaUserProfile = yup.object().shape({
 });
 
 export const assignExerciseSchema = yup.object().shape({
-  workoutId: yup.string().required("Required"),
+  workoutId: yup.array().min(1, "At least one purpose is Required"),
   equipmentId: yup.string().required("Required"),
   numberOfSessions: yup.string().required("Required"),
   description: yup.string().required("Required"),
@@ -204,22 +204,6 @@ export const validationSchemaTrainerEdit = yup.object().shape({
     .required("NIC is Required"),
   dob: yup.string().required("Birthday is Required"),
   gender: yup.string().required("Gender is Required"),
-  height: yup
-    .string()
-    .test("is-cm", "Invalid height format (use height cm)", (value) => {
-      if (!value) return false;
-      const cmRegex = /^[0-9]+\.?[0-9]*\s?cm$/;
-      return cmRegex.test(value);
-    })
-    .required("Height is Required"),
-  weight: yup
-    .string()
-    .test("is-kg", "Invalid weight format (use weight kg)", (value) => {
-      if (!value) return false;
-      const kgRegex = /^[0-9]+\.?[0-9]*\s?kg$/;
-      return kgRegex.test(value);
-    })
-    .required("Weight is Required"),
   mobile: yup
     .string()
     .matches(/^((0094)(\d{9})|(0)(\d{9})|(94)(\d{9}))$/, "Invalid Mobile")

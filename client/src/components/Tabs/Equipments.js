@@ -23,7 +23,7 @@ import EquipmentEdit from "./Edit/EquipmentEdit";
 import { userRoles } from "../../resources/UserRoles";
 import { equipmentSchema } from "../utils/validations";
 
-const Equipments = () => {
+const Equipments = ({forceRender}) => {
   const columns = [
     {
       title: "Name",
@@ -162,7 +162,7 @@ const Equipments = () => {
 
   useEffect(() => {
     handleFetchData();
-  }, [addEquip, editMode, isModalOpen]);
+  }, [addEquip, editMode, isModalOpen, forceRender]);
 
   const handleOk = () => {
     setIsModalOpen(false);

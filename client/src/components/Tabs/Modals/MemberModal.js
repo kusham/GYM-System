@@ -1,4 +1,4 @@
-import { Col, Descriptions, Modal, Row, Select } from "antd";
+import { Col, Descriptions, Modal, Row, Select, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   AssignButton,
@@ -9,6 +9,7 @@ import {
   InputFelidModel,
   LabelModal,
   ModalSelectWrapper,
+  TagContainer,
 } from "../style";
 import { assignTrainer, getTrainers } from "../../../actions/AuthActions";
 import { getWorkouts } from "../../../actions/WorkoutAction";
@@ -28,7 +29,7 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
   const [inputs, setInputs] = useState({
     memberId: "",
     trainerId: JSON.parse(sessionStorage.getItem("user")),
-    workoutId: "",
+    workoutId: [],
     equipmentId: "",
     numberOfSessions: "",
     description: "",
@@ -38,7 +39,7 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
     setInputs({
       memberId: "",
       trainerId: JSON.parse(sessionStorage.getItem("user")),
-      workoutId: "",
+      workoutId: [],
       equipmentId: "",
       numberOfSessions: "",
       description: "",
@@ -66,6 +67,7 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
 
   const handleWorkOutEventAssign = () => {
     setValidationMode(true);
+    console.log(inputs);
     assignExerciseSchema
       .validate(inputs, { abortEarly: false })
       .then(async () => {
@@ -102,6 +104,13 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
     }
   }, [inputs, validationMode]);
 
+  const handleClose = (id) => {
+    console.log(id);
+    const filterItem = inputs.workoutId.filter((item) => item.id !== id);
+    console.log(filterItem);
+
+    setInputs({ ...inputs, workoutId: filterItem });
+  };
   return (
     <Modal
       title="Member Details"
@@ -165,13 +174,16 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
               <FormItem>
                 <LabelModal>Exercise</LabelModal>
                 <CustomModalSelect
-                  // mode="multiple"
-                  // allowClear
                   style={{ width: "100%" }}
                   placeholder="Select Workout"
-                  value={inputs.workoutId}
+                  // value={inputs.workoutId}
                   onChange={(value) => {
-                    setInputs({ ...inputs, workoutId: value });
+                    console.log(value);
+                    const filterItem = workouts.find(
+                      (item) => item.id === value
+                    );
+                    const newWorkouts = [...inputs.workoutId, filterItem];
+                    setInputs({ ...inputs, workoutId: newWorkouts });
                   }}
                 >
                   {workouts?.map((item) => (
@@ -180,7 +192,19 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
                     </Select.Option>
                   ))}
                 </CustomModalSelect>
-
+                <TagContainer>
+                  {inputs.workoutId?.length > 0 &&
+                    inputs.workoutId?.map((item) => (
+                      <Tag
+                        color="success"
+                        closable
+                        style={{ width: "fit-content" }}
+                        onClose={() => handleClose(item.id)}
+                      >
+                        {item.title}
+                      </Tag>
+                    ))}
+                </TagContainer>
                 {errors?.workoutId && (
                   <ErrorMessage>{errors?.workoutId}</ErrorMessage>
                 )}
@@ -214,6 +238,7 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
               <FormItem>
                 <LabelModal>Number Of Sessions</LabelModal>
                 <InputFelidModel
+                  type="number"
                   name="numberOfSessions"
                   onChange={handleOnChange}
                   value={inputs.numberOfSessions}

@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Container, CustomTable, IconWrapper } from "./style";
+import { Container, CustomTable, IconWrapper, TagContainer } from "./style";
 import { EyeFilled } from "@ant-design/icons";
-import { getWorkoutEventsByInstructor, getWorkoutEventsByMember } from "../../actions/WorkoutEventAction";
+import {
+  getWorkoutEventsByInstructor,
+  getWorkoutEventsByMember,
+} from "../../actions/WorkoutEventAction";
 import EventModal from "./Modals/EventModal";
 import { userRoles } from "../../resources/UserRoles";
+import { Tag } from "antd";
 
 const AssignedWorkouts = ({ forceRender }) => {
   const columns = [
@@ -32,7 +36,16 @@ const AssignedWorkouts = ({ forceRender }) => {
       title: "Exercise",
       dataIndex: "workout",
       render: (text) => {
-        return text;
+        return (
+          <TagContainer>
+            {text?.length > 0 &&
+              text?.map((item) => (
+                <Tag color="success" style={{ width: "fit-content" }}>
+                  {item}
+                </Tag>
+              ))}
+          </TagContainer>
+        );
       },
     },
     {
@@ -43,12 +56,12 @@ const AssignedWorkouts = ({ forceRender }) => {
       },
     },
     {
-        title: "Completed Sessions",
-        dataIndex: "element",
-        render: (text) => {
-          return text?.completedSessions === null ? 0 : text?.completedSessions;
-        },
+      title: "Completed Sessions",
+      dataIndex: "element",
+      render: (text) => {
+        return text?.completedSessions === null ? 0 : text?.completedSessions;
       },
+    },
     {
       title: "Actions",
       dataIndex: "action",
@@ -73,10 +86,10 @@ const AssignedWorkouts = ({ forceRender }) => {
   const user = JSON.parse(sessionStorage.getItem("profile"));
 
   const handleFetchData = async () => {
-    if(userRoles.INSTRUCTOR === user?.userRole) {
+    if (userRoles.INSTRUCTOR === user?.userRole) {
       setEvents(await getWorkoutEventsByInstructor());
     } else if (userRoles.MEMBER === user?.userRole) {
-      setEvents(await getWorkoutEventsByMember())
+      setEvents(await getWorkoutEventsByMember());
     }
   };
   const handleViewTrainer = (event) => {
@@ -94,11 +107,7 @@ const AssignedWorkouts = ({ forceRender }) => {
   return (
     <Container>
       <CustomTable dataSource={events} columns={columns} />
-      <EventModal
-        isModalOpen={isModalOpen}
-        onOk={handleOk}
-        event={event}
-      />
+      <EventModal isModalOpen={isModalOpen} onOk={handleOk} event={event} />
     </Container>
   );
 };
