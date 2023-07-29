@@ -4,6 +4,7 @@ import { Button } from "antd";
 import {
   acceptRequestEquipment,
   cancelRequestEquipment,
+  deleteRequestEquipment,
   getEquipment,
   getRequestEquipment,
   getRequestEquipmentByMember,
@@ -67,7 +68,7 @@ const EquipmentRequest = ({ forceRender }) => {
                 </Button>
                 <Button
                   onClick={() => handleReject(record.element)}
-                  style={{ background: "red" }}
+                  style={{ background: "orange" }}
                 >
                   Reject
                 </Button>
@@ -82,6 +83,14 @@ const EquipmentRequest = ({ forceRender }) => {
                 </Button>
               )
             )}
+            {record.element.status === "Released" &&
+              <Button
+              onClick={() => handleDelete(record.element)}
+              style={{ background: "red" }}
+            >
+              Delete
+            </Button>
+            }
           </IconWrapper>
         );
       },
@@ -102,6 +111,12 @@ const EquipmentRequest = ({ forceRender }) => {
     acceptRequestEquipment(record);
     setRerender(!rerender);
   };
+
+  const handleDelete = async (record) => {
+    deleteRequestEquipment(record);
+    setRerender(!rerender);
+  };
+
   const handleReject = async (record) => {
     rejectRequestEquipment(record);
     setRerender(!rerender);
@@ -114,6 +129,7 @@ const EquipmentRequest = ({ forceRender }) => {
 
   useEffect(() => {
     handleFetchData();
+    console.log('render');
   }, [forceRender, rerender]);
   return <CustomTable dataSource={requests} columns={columns} />;
 };

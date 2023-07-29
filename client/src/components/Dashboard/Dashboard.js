@@ -1,12 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RootContainer, UserName } from "./style";
 import { userRoles } from "../../resources/UserRoles";
 import AdminDashboard from "./AdminDashboard";
 import InstructorDashBoard from "./InstructorDashBoard";
 import MemberDashboard from "./MemberDashboard";
+import { getMemberByID, getTrainerByID } from "../../actions/AuthActions";
 
 const Dashboard = ({ userRole }) => {
-  const user = JSON.parse(sessionStorage.getItem("profile"));
+  const [user, setUser] = useState(
+    JSON.parse(sessionStorage.getItem("profile"))
+  );
+
+  const fetchData = async () => {
+    if (user?.userRole === userRoles.MEMBER) {
+      const data = await getMemberByID(user?.userID);
+      sessionStorage.setItem("profile", JSON.stringify(data));
+      setUser(data);
+    } else if (user?.userRole === userRoles.INSTRUCTOR) {
+      const data = await getTrainerByID(user?.userID);
+      sessionStorage.setItem("profile", JSON.stringify(data));
+      setUser(data);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const renderDashboard = () => {
     switch (userRole) {
@@ -22,7 +40,10 @@ const Dashboard = ({ userRole }) => {
   };
   return (
     <RootContainer>
-      <UserName>Welcome, <span>{user?.fullName}</span><p>({user?.userRole})</p></UserName>
+      <UserName>
+        Welcome, <span>{user?.fullName}</span>
+        <p>({user?.userRole})</p>
+      </UserName>
       {renderDashboard()}
     </RootContainer>
   );

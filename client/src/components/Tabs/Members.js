@@ -104,9 +104,8 @@ const Members = ({ forceRender, trainerMode }) => {
   };
 
   const handleDeleteMember = (member) => {
-    console.log(member);
     deleteMember(member);
-    setRefresh(true);
+    setRefresh(!refresh);
   };
 
   const handleViewMember = (member) => {

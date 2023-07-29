@@ -4,7 +4,7 @@ import React from "react";
 const TrainerModal = ({ isModalOpen, onOk, trainer }) => {
   return (
     <Modal
-      title="Member Details"
+      title="Trainer Details"
       cancelButtonProps={{ style: { display: "none" } }}
       open={isModalOpen}
       onOk={onOk}
@@ -36,14 +36,10 @@ const TrainerModal = ({ isModalOpen, onOk, trainer }) => {
         <Descriptions.Item label="Specialty">
           {trainer?.specialty ? trainer?.specialty : "--"}
         </Descriptions.Item>
-        <Descriptions.Item label="Personal Info">
-          {trainer?.personalInfo ? trainer?.personalInfo : "--"}
-        </Descriptions.Item>
-        <Descriptions.Item label="">
-           
-        </Descriptions.Item>
+        <Descriptions.Item label=""></Descriptions.Item>
+        <Descriptions.Item label=""></Descriptions.Item>
         <Descriptions.Item label="Members">
-            {trainer?.members?.length === 0 && '--'}
+          {trainer?.members?.length === 0 && "--"}
         </Descriptions.Item>
       </Descriptions>
       {trainer?.members &&

@@ -17,6 +17,7 @@ export const InputFelid = styled(Input)`
   border-bottom: 1px solid white;
   border-radius: 0;
   background: transparent;
+  color: white;
   &::placeholder {
     color: gray;
     font-size: 20px;

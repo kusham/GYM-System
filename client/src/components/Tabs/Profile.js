@@ -24,8 +24,15 @@ import {
 import { Col, Row } from "antd";
 import dayjs from "dayjs";
 import { RegisterButton } from "../Registration/style";
-import { updateUser } from "../../actions/AuthActions";
-import { validationSchemaUserProfile } from "../utils/validations";
+import {
+  getMemberByID,
+  getTrainerByID,
+  updateUser,
+} from "../../actions/AuthActions";
+import {
+  validationSchemaTrainerEdit,
+  validationSchemaUserProfile,
+} from "../utils/validations";
 import { userRoles } from "../../resources/UserRoles";
 
 const preferenceOptions = [
@@ -34,10 +41,9 @@ const preferenceOptions = [
   { label: "Athletic Performance", value: "Athletic Performance" },
 ];
 
-const Profile = () => {
-  const [profile, setProfile] = useState(
-    JSON.parse(sessionStorage.getItem("profile"))
-  );
+const Profile = ({ forceRender }) => {
+  const user = JSON.parse(sessionStorage.getItem("profile"));
+  const [profile, setProfile] = useState(null);
   const [errors, setErrors] = useState({});
   const [validationMode, setValidationMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -50,6 +56,18 @@ const Profile = () => {
     });
     setEditMode(true);
   };
+  const fetchData = async () => {
+    if (user?.userRole === userRoles.MEMBER) {
+      const data = await getMemberByID(user?.userID);
+      data.purpose = data.purpose.split(",");
+      setProfile(data);
+    } else if (user?.userRole === userRoles.INSTRUCTOR) {
+      setProfile(await getTrainerByID(user?.userID));
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, [forceRender]);
 
   const handleUpdate = () => {
     setValidationMode(true);
@@ -57,7 +75,8 @@ const Profile = () => {
       updateUser(profile);
       setEditMode(false);
       const user = profile;
-      user.purpose = user.purpose.split(",");
+      if (profile?.userRole === userRoles.MEMBER)
+        user.purpose = user.purpose.split(",");
       sessionStorage.setItem("profile", JSON.stringify(user));
     }
   };
@@ -77,18 +96,33 @@ const Profile = () => {
 
   useEffect(() => {
     if (validationMode) {
-      validationSchemaUserProfile
-        .validate(profile, { abortEarly: false })
-        .then(() => {
-          setErrors(null);
-        })
-        .catch((validationErrors) => {
-          const newErrors = {};
-          validationErrors.inner.forEach((error) => {
-            newErrors[error.path] = error.message;
+      if (profile?.userRole === userRoles.INSTRUCTOR) {
+        validationSchemaTrainerEdit
+          .validate(profile, { abortEarly: false })
+          .then(() => {
+            setErrors(null);
+          })
+          .catch((validationErrors) => {
+            const newErrors = {};
+            validationErrors.inner.forEach((error) => {
+              newErrors[error.path] = error.message;
+            });
+            setErrors(newErrors);
           });
-          setErrors(newErrors);
-        });
+      } else {
+        validationSchemaUserProfile
+          .validate(profile, { abortEarly: false })
+          .then(() => {
+            setErrors(null);
+          })
+          .catch((validationErrors) => {
+            const newErrors = {};
+            validationErrors.inner.forEach((error) => {
+              newErrors[error.path] = error.message;
+            });
+            setErrors(newErrors);
+          });
+      }
     }
   }, [profile, validationMode]);
 
@@ -109,25 +143,25 @@ const Profile = () => {
             <Col sm={24} md={8} lg={6}>
               <DataItem>
                 <DataTitle>ID : </DataTitle>
-                <Data>{profile.userID}</Data>
+                <Data>{profile?.userID}</Data>
               </DataItem>
             </Col>
             <Col sm={24} md={8} lg={6}>
               <DataItem>
                 <DataTitle>Full Name : </DataTitle>
-                <Data>{profile.fullName}</Data>
+                <Data>{profile?.fullName}</Data>
               </DataItem>
             </Col>
             <Col sm={24} md={8} lg={6}>
               <DataItem>
                 <DataTitle>Email : </DataTitle>
-                <Data>{profile.email}</Data>
+                <Data>{profile?.email}</Data>
               </DataItem>
             </Col>
             <Col sm={24} md={8} lg={6}>
               <DataItem>
                 <DataTitle>NIC : </DataTitle>
-                <Data>{profile.nic}</Data>
+                <Data>{profile?.nic}</Data>
               </DataItem>
             </Col>
           </Row>
@@ -135,47 +169,61 @@ const Profile = () => {
             <Col sm={24} md={8} lg={6}>
               <DataItem>
                 <DataTitle>Birthday : </DataTitle>
-                <Data>{new Date(profile.dob).toDateString()}</Data>
+                <Data>{new Date(profile?.dob).toDateString()}</Data>
               </DataItem>
             </Col>
             <Col sm={24} md={8} lg={6}>
               <DataItem>
                 <DataTitle>Gender : </DataTitle>
-                <Data>{profile.gender}</Data>
+                <Data>{profile?.gender}</Data>
               </DataItem>
             </Col>
             <Col sm={24} md={8} lg={6}>
               <DataItem>
                 <DataTitle>Mobile : </DataTitle>
-                <Data>{profile.mobile}</Data>
+                <Data>{profile?.mobile}</Data>
               </DataItem>
             </Col>
             <Col sm={24} md={8} lg={6}>
               <DataItem>
                 <DataTitle>Branch : </DataTitle>
-                <Data>{profile.branch}</Data>
+                <Data>{profile?.branch}</Data>
               </DataItem>
             </Col>
           </Row>
           <Row gutter={16} style={{ marginTop: "50px" }}>
-            <Col sm={24} md={8} lg={6}>
-              <DataItem>
-                <DataTitle>Purpose : </DataTitle>
-                <Data>{profile.purpose}</Data>
-              </DataItem>
-            </Col>
+            {profile?.userRole === userRoles.INSTRUCTOR ? (
+              <Col sm={24} md={8} lg={6}>
+                <DataItem>
+                  <DataTitle>Specialty : </DataTitle>
+                  <Data>{profile?.specialty}</Data>
+                </DataItem>
+              </Col>
+            ) : (
+              <Col sm={24} md={8} lg={6}>
+                <DataItem>
+                  <DataTitle>Purpose : </DataTitle>
+                  <Data>{profile?.purpose}</Data>
+                </DataItem>
+              </Col>
+            )}
+
             {profile?.userRole === userRoles.MEMBER && (
               <>
                 <Col sm={24} md={8} lg={6}>
                   <DataItem>
                     <DataTitle>Weight : </DataTitle>
-                    <Data>{profile.weight} kg</Data>
+                    <Data>
+                      {profile?.weight ? profile?.weight + "kg" : "--"}
+                    </Data>
                   </DataItem>
                 </Col>
                 <Col sm={24} md={8} lg={6}>
                   <DataItem>
                     <DataTitle>Height : </DataTitle>
-                    <Data>{profile.height} cm</Data>
+                    <Data>
+                      {profile?.height ? profile?.height + "kg" : "--"}
+                    </Data>
                   </DataItem>
                 </Col>
               </>
@@ -339,21 +387,47 @@ const Profile = () => {
                       )}
                     </FormItem>
                   </Col>
-                  <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-                    <FormItem>
-                      <Label>Preference</Label>
-                      <CheckBoxes
-                        value={profile.purpose}
-                        options={preferenceOptions}
-                        onChange={(value) =>
-                          setProfile({ ...profile, purpose: value })
-                        }
-                      />
-                      {errors?.purpose && (
-                        <ErrorMessage>{errors?.purpose}</ErrorMessage>
-                      )}
-                    </FormItem>
-                  </Col>
+                  {profile?.userRole === userRoles.MEMBER && (
+                    <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                      <FormItem>
+                        <Label>Preference</Label>
+                        <CheckBoxes
+                          value={profile.purpose}
+                          options={preferenceOptions}
+                          onChange={(value) =>
+                            setProfile({ ...profile, purpose: value })
+                          }
+                        />
+                        {errors?.purpose && (
+                          <ErrorMessage>{errors?.purpose}</ErrorMessage>
+                        )}
+                      </FormItem>
+                    </Col>
+                  )}
+                  {profile?.userRole === userRoles.INSTRUCTOR && (
+                    <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                      <FormItem>
+                        <Label>Specialty</Label>
+                        <CustomSelect
+                          options={[
+                            { label: "Weight Loss", value: "Weight Loss" },
+                            {
+                              label: "Muscle Building",
+                              value: "Muscle Building",
+                            },
+                            {
+                              label: "Athletic Performance",
+                              value: "Athletic Performance",
+                            },
+                          ]}
+                          onChange={(value) => {
+                            setProfile({ ...profile, specialty: value });
+                          }}
+                          value={profile.specialty}
+                        />
+                      </FormItem>
+                    </Col>
+                  )}
                 </>
               )}
             </Row>

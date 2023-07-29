@@ -83,10 +83,6 @@ export const validationSchemaUserProfile = yup.object().shape({
       return kgRegex.test(value);
     })
     .required("Weight is Required"),
-  purpose: yup
-    .array()
-    .of(yup.string())
-    .min(1, "At least one purpose is Required"),
 });
 
 export const assignExerciseSchema = yup.object().shape({
