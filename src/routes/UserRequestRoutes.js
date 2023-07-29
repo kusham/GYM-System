@@ -1,5 +1,5 @@
 const express = require("express");
-const { createRequest, getAllRequests, updateRequest, getAllRequestsByTrainer, getAllRequestsByMember } = require("../controllers/RequestControllers");
+const { createRequest, getAllRequests, updateRequest, getAllRequestsByTrainer, getAllRequestsByMember, deleteRequest } = require("../controllers/RequestControllers");
 
 const router = express.Router();
 
@@ -14,6 +14,8 @@ router.get("/getall",getAllRequests);
 router.put("/reject/", updateRequest);
 router.put("/accept/", updateRequest);
 router.put("/cancel/", updateRequest);
+router.delete("/delete/:id", deleteRequest);
+
 
 router.get("/getallByMember/:id",getAllRequestsByMember);
 router.get("/getallByTrainer/:id",getAllRequestsByTrainer);

@@ -178,3 +178,34 @@ module.exports.getAllRequestsByTrainer = async (req, res) => {
     });
   }
 };
+
+
+
+//-------------------------delete Request by id--------------------------
+module.exports.deleteRequest = async (req, res) => {
+    console.log("delete Request");
+    console.log(req.params);
+    try {
+      const result = await UserRequest.destroy({
+        where: { id: req.params.id },
+      });
+  
+      if (result == 1) {
+        res.status(200).json({
+          success: true,
+          message: "Request deleted Successfully.",
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: "Request delete failed.",
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Request delete failed",
+        error: error.message,
+      });
+    }
+  };
