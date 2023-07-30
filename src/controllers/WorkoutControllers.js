@@ -87,10 +87,7 @@ module.exports.deleteWorkoutById = async (req, res) => {
     for (const event of events) {
       const ids = event.workoutId.split(',');
       for(const id of ids) {
-        const workout = await Workout.findOne({
-          where: { id: id}
-        });
-        if(workout) {
+        if(Number(id) == req.params.id) {
           return res.status(400).json({
             success: false,
             message: "workout delete failed. Workout has used in workout event.",
