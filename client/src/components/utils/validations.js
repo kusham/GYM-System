@@ -87,7 +87,6 @@ export const validationSchemaUserProfile = yup.object().shape({
 
 export const assignExerciseSchema = yup.object().shape({
   workoutId: yup.array().min(1, "At least one purpose is Required"),
-  equipmentId: yup.string().required("Required"),
   numberOfSessions: yup.string().required("Required"),
   description: yup.string().required("Required"),
 });

@@ -103,7 +103,7 @@ const Equipments = ({forceRender}) => {
   const handleEquipmentDelete = (equipment) => {
     console.log(equipment);
     deleteEquipment(equipment);
-    setRefresh(true);
+    setRefresh(!refresh);
   };
 
   const handleViewEquipment = (equipment) => {
@@ -164,7 +164,7 @@ const Equipments = ({forceRender}) => {
 
   useEffect(() => {
     handleFetchData();
-  }, [addEquip, editMode, isModalOpen, forceRender]);
+  }, [addEquip, editMode, isModalOpen, forceRender, refresh]);
 
   const handleOk = () => {
     setIsModalOpen(false);
