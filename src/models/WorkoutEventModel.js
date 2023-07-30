@@ -26,14 +26,14 @@ var WorkoutEvent = db.define(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    equipmentId: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: "equipment",
-        key: "id",
-      },
-    },
+    // equipmentId: {
+    //   type: Sequelize.INTEGER,
+    //   allowNull: false,
+    //   references: {
+    //     model: "equipment",
+    //     key: "id",
+    //   },
+    // },
     numberOfSessions: {
       type: Sequelize.INTEGER,
       allowNull: false,

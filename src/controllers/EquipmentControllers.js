@@ -83,6 +83,15 @@ module.exports.updateEquipmentById = async (req, res) => {
 module.exports.deleteEquipmentById = async (req, res) => {
   console.log("delete Equipment");
   try {
+    const equipment = await Equipment.findOne({
+      where: { id: req.params.id }
+    });
+    if(equipment.availableCount !== equipment.totalCount) {
+     return res.status(400).json({
+        success: false,
+        message: "Equipment is using. Can't delete.",
+      });
+    }
     const result = await Equipment.destroy({
       where: { id: req.params.id },
     });

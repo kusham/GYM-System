@@ -291,6 +291,20 @@ module.exports.getMembersAssignToInstructor = async (req, res) => {
 module.exports.deleteMember = async (req, res) => {
   console.log("delete member");
   try {
+    const user = await User.findOne({
+      where: { userID: req.params.id }
+    });
+    if (user.userRole === userRoles.INSTRUCTOR) {
+      const isInstructor = await User.findOne({
+        where: { instructorId: req.params.id }
+      });
+      if(isInstructor) {
+       return res.status(400).json({
+          success: false,
+          message: "Instructor can't delete Members are assigned to this Instructor.",
+        });
+      }
+    }
     const result = await User.destroy({
       where: { userID: req.params.id },
     });

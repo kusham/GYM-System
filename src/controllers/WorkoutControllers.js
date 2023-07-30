@@ -1,3 +1,4 @@
+const WorkoutEvent = require("../models/WorkoutEventModel");
 const Workout = require("../models/WorkoutModel");
 
 //-------------------------create new workouts--------------------------
@@ -82,6 +83,22 @@ module.exports.updateWorkoutById = async (req, res) => {
 module.exports.deleteWorkoutById = async (req, res) => {
   console.log("delete workouts");
   try {
+    const events = await WorkoutEvent.findAll();
+    for (const event of events) {
+      const ids = event.workoutId.split(',');
+      for(const id of ids) {
+        const workout = await Workout.findOne({
+          where: { id: id}
+        });
+        if(workout) {
+          return res.status(400).json({
+            success: false,
+            message: "workout delete failed. Workout has used in workout event.",
+          });
+        }
+      }
+      
+    }
     const result = await Workout.destroy({
       where: { id: req.params.id },
     });

@@ -8,7 +8,7 @@ module.exports.createWorkoutEvent = async (req, res) => {
   console.log("create a workout Event");
   console.log(req.body);
   let event = req.body;
-  event.workoutId = event.workoutId.map((item)=> item.id).join(', ');
+  event.workoutId = event.workoutId.map((item) => item.id).join(", ");
   try {
     const newWorkoutEvent = new WorkoutEvent(event);
 
@@ -111,23 +111,26 @@ module.exports.getAllWorkoutsEventsByInstructor = async (req, res) => {
   console.log("get all workouts Events by instructor id");
   try {
     const workoutsEvents = await WorkoutEvent.findAll({
-      where: { trainerId: req.params.id }
+      where: { trainerId: req.params.id },
     });
-    let elements = []
+    let elements = [];
     for (const element of workoutsEvents) {
-      let workouts = []
-      element.workoutId =  element?.workoutId?.split(',');
-        if (element?.workoutId?.length > 0) {
-          element?.workoutId.map(async item => {
-             const workout = await Workout.findOne({where: {id: parseInt(item.trim(), 10)}})
-             workouts.push(workout.title)
-           })
-          
-        }
-        const equipment = await Equipment.findOne({where: {id: element.equipmentId}})
-        const member = await User.findOne({where: {userID: element.memberId}})
-        elements.push({workout: workouts, equipment: equipment.name, member: member.fullName, element})
-    };
+      let workouts = [];
+      element.workoutId = element?.workoutId?.split(",");
+      if (element?.workoutId?.length > 0) {
+        element?.workoutId.map(async (item) => {
+          const workout = await Workout.findOne({
+            where: { id: parseInt(item.trim(), 10) },
+          });
+          workouts.push(workout.title);
+        });
+      }
+      // const equipment = await Equipment.findOne({where: {id: element.equipmentId}})
+      const member = await User.findOne({
+        where: { userID: element.memberId },
+      });
+      elements.push({ workout: workouts, member: member.fullName, element });
+    }
 
     res.status(200).json({
       success: true,
@@ -143,44 +146,46 @@ module.exports.getAllWorkoutsEventsByInstructor = async (req, res) => {
   }
 };
 
-
 //-------------------------get all workouts Events by member id--------------------------
 module.exports.getAllWorkoutsEventsByMember = async (req, res) => {
-    console.log("get all workouts Events by member id");
-    try {
-      const workoutsEvents = await WorkoutEvent.findAll({
-        where: { memberId: req.params.id }
+  console.log("get all workouts Events by member id");
+  try {
+    const workoutsEvents = await WorkoutEvent.findAll({
+      where: { memberId: req.params.id },
+    });
+    let elements = [];
+    for (const element of workoutsEvents) {
+      let workouts = [];
+      element.workoutId = element?.workoutId?.split(",");
+      if (element?.workoutId?.length > 0) {
+        element?.workoutId.map(async (item) => {
+          const workout = await Workout.findOne({
+            where: { id: parseInt(item.trim(), 10) },
+          });
+          if (workout) workouts.push(workout?.title);
+        });
+      }
+      // const equipment = await Equipment.findOne({where: {id: element.equipmentId}})
+      const instructor = await User.findOne({
+        where: { userID: element.trainerId },
       });
-      let elements = []
-      for (const element of workoutsEvents) {
-        let workouts = []
-        element.workoutId =  element?.workoutId?.split(',');
-          if (element?.workoutId?.length > 0) {
-            element?.workoutId.map(async item => {
-               const workout = await Workout.findOne({where: {id: parseInt(item.trim(), 10)}})
-               workouts.push(workout.title)
-             })
-            
-          }
-          const equipment = await Equipment.findOne({where: {id: element.equipmentId}})
-          const instructor = await User.findOne({where: {userID: element.trainerId}})
-          elements.push({workout: workouts, equipment: equipment.name, member: instructor.fullName, element})
-      };
-  
-      res.status(200).json({
-        success: true,
-        message: "workout events fetched Successfully.",
-        workoutsEvents: elements,
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "workout events fetch failed",
-        error: error.message,
+      elements.push({
+        workout: workouts,
+        member: instructor.fullName,
+        element,
       });
     }
-  };
-  
 
-
-  
+    res.status(200).json({
+      success: true,
+      message: "workout events fetched Successfully.",
+      workoutsEvents: elements,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "workout events fetch failed",
+      error: error.message,
+    });
+  }
+};
