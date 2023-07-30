@@ -30,7 +30,7 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
     memberId: "",
     trainerId: JSON.parse(sessionStorage.getItem("user")),
     workoutId: [],
-    equipmentId: "",
+    // equipmentId: "",
     numberOfSessions: "",
     description: "",
   });
@@ -40,7 +40,7 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
       memberId: "",
       trainerId: JSON.parse(sessionStorage.getItem("user")),
       workoutId: [],
-      equipmentId: "",
+      // equipmentId: "",
       numberOfSessions: "",
       description: "",
     });
@@ -210,7 +210,7 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
                 )}
               </FormItem>
             </Col>
-            <Col xs={24} sm={24} md={12}>
+            {/* <Col xs={24} sm={24} md={12}>
               <FormItem>
                 <LabelModal>Equipment</LabelModal>
                 <CustomModalSelect
@@ -231,9 +231,7 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
                   <ErrorMessage>{errors?.equipmentId}</ErrorMessage>
                 )}
               </FormItem>
-            </Col>
-          </Row>
-          <Row gutter={16}>
+            </Col> */}
             <Col xs={24} sm={24} md={12}>
               <FormItem>
                 <LabelModal>Number Of Sessions</LabelModal>
@@ -248,6 +246,8 @@ const MemberModal = ({ isModalOpen, onOk, member, trainerMode }) => {
                 )}
               </FormItem>
             </Col>
+          </Row>
+          <Row gutter={16}>
             <Col xs={24} sm={24} md={12}>
               <FormItem>
                 <LabelModal>Description</LabelModal>

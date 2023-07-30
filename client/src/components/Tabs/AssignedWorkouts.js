@@ -25,13 +25,13 @@ const AssignedWorkouts = ({ forceRender }) => {
         return text;
       },
     },
-    {
-      title: "Equipment Name",
-      dataIndex: "equipment",
-      render: (text) => {
-        return text;
-      },
-    },
+    // {
+    //   title: "Equipment Name",
+    //   dataIndex: "equipment",
+    //   render: (text) => {
+    //     return text;
+    //   },
+    // },
     {
       title: "Exercise",
       dataIndex: "workout",

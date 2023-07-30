@@ -222,7 +222,7 @@ const Profile = ({ forceRender }) => {
                   <DataItem>
                     <DataTitle>Height : </DataTitle>
                     <Data>
-                      {profile?.height ? profile?.height + "kg" : "--"}
+                      {profile?.height ? profile?.height + "cm" : "--"}
                     </Data>
                   </DataItem>
                 </Col>
