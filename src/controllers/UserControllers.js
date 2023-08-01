@@ -298,8 +298,8 @@ module.exports.deleteMember = async (req, res) => {
       const isInstructor = await User.findOne({
         where: { instructorId: req.params.id }
       });
-      if(isInstructor) {
-       return res.status(400).json({
+      if (isInstructor) {
+        return res.status(400).json({
           success: false,
           message: "Instructor can't delete Members are assigned to this Instructor.",
         });
@@ -324,6 +324,61 @@ module.exports.deleteMember = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Member delete failed",
+      error: error.message,
+    });
+  }
+};
+
+
+//-------------------------get user count based on user age--------------------------
+module.exports.getUserCountByAge = async (req, res) => {
+  console.log("get user by age");
+  try {
+    const users = await User.findAll();
+    let fifteenToTowentyFive = 0;
+    let towentyFiveToThirtyFive = 0;
+    let thirtyFiveToFourtyFive = 0;
+    let fourtyFiveToFiftyFive = 0;
+    let overFiftyFive = 0;
+
+
+    for (const user of users) {
+      // const age = calculateAge(user?.dob);
+      if (user?.userRole == userRoles.MEMBER) {
+        const dobDate = new Date(user?.dob);
+        const today = new Date();
+        let age = today.getFullYear() - dobDate.getFullYear();
+        const dobMonth = dobDate.getMonth();
+        const todayMonth = today.getMonth();
+
+        if (todayMonth < dobMonth || (todayMonth === dobMonth && today.getDate() < dobDate.getDate())) {
+          age--;
+        }
+        if (age >= 15 && age < 25) {
+          fifteenToTowentyFive++;
+        } else if (age >= 25 && age < 35) {
+          towentyFiveToThirtyFive++;
+        } else if (age >= 35 && age < 45) {
+          thirtyFiveToFourtyFive++;
+        } else if (age >= 45 && age < 55) {
+          fourtyFiveToFiftyFive++;
+        } else if (age >= 55) {
+          overFiftyFive++;
+        }
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "user count fetched Successfully.",
+      count: [{ ageLimit: '15 - 25', count: fifteenToTowentyFive }, { ageLimit: '25 - 35', count: towentyFiveToThirtyFive },
+      { ageLimit: '35 - 45', count: thirtyFiveToFourtyFive }, { ageLimit: '45 - 55', count: fourtyFiveToFiftyFive },
+      { ageLimit: 'over 55', count: overFiftyFive }]
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "User count fetch failed",
       error: error.message,
     });
   }

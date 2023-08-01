@@ -15,6 +15,7 @@ const {
   assignToInstructor,
   getMembersAssignToInstructor,
   deleteMember,
+  getUserCountByAge,
 } = require("../controllers/UserControllers");
 const router = express.Router();
 
@@ -34,6 +35,8 @@ router.get("/getMemberById/:userID", getMemberById);
 router.get("/getInstructorById/:userID", getInstructorById);
 router.get("/getUserCountForRoles", getUserCountForRoles);
 router.get("/getNewRegistrants", getNewRegistrants);
+router.get("/getUserCountByAge", getUserCountByAge);
+
 
 router.put("/updateUser/:userID", updateUser);
 router.put("/assignToInstructor", assignToInstructor);
