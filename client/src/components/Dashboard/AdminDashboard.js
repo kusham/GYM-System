@@ -8,6 +8,7 @@ import Trainer from '../Registration/Trainer';
 import Workouts from '../Tabs/Workouts';
 import Summary from '../Tabs/Summary';
 import EquipmentRequest from '../Tabs/EquipmentRequest';
+import PDFFile from '../Tabs/PDFFile';
 
 
 const AdminDashboard = () => {
@@ -56,6 +57,11 @@ const AdminDashboard = () => {
       key: '8',
       label: `Member Requests`,
       children: <EquipmentRequest forceRender={forceRender}/>,
+    },
+    {
+      key: '9',
+      label: `Stats`,
+      children: <PDFFile forceRender={forceRender}/>,
     },
   ];
   

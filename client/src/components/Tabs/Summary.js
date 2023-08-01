@@ -7,14 +7,18 @@ import {
   RateContainer,
   RateTitle,
 } from "./style";
-import { Card } from "antd";
+import { Button, Card, Row } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import {
   getNewRegistrants,
   getUserCountForRoles,
 } from "../../actions/AuthActions";
 import { userRoles } from "../../resources/UserRoles";
-const Summary = ({forceRender}) => {
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import PDFFile from "./PDFFile";
+
+
+const Summary = ({ forceRender }) => {
   const [memberCount, setMemberCount] = useState(0);
   const [trainerCount, setTrainerCount] = useState(0);
   const [newRCount, setNewRCount] = useState(0);
@@ -48,6 +52,7 @@ const Summary = ({forceRender}) => {
     }
     return calculateGCD(b, a % b);
   };
+ 
 
   return (
     <Container>
@@ -95,6 +100,12 @@ const Summary = ({forceRender}) => {
         <RateTitle>Trainers : Members</RateTitle>
         <Circle>{rate()}</Circle>
       </RateContainer>
+      <Row justify='end'>
+        {/* <PDFDownloadLink document={<PDFFile />} filename="Summary.pdf">
+          {({ loading }) => (loading ? <Button>Loading Document...</Button> : <Button>DownloadPDF</Button>)}
+        </PDFDownloadLink> */}
+        
+      </Row>
     </Container>
   );
 };

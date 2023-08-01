@@ -8,6 +8,7 @@ import AssignedWorkouts from "../Tabs/AssignedWorkouts";
 import Profile from "../Tabs/Profile";
 import EquipmentRequest from "../Tabs/EquipmentRequest";
 import Meals from "../Tabs/Meals";
+import PDFFile from "../Tabs/PDFFile";
 
 const MemberDashboard = () => {
   const [forceRender, setForceRender] = useState(false);
@@ -46,6 +47,11 @@ const MemberDashboard = () => {
       key: "6",
       label: `Profile`,
       children: <Profile setForceRender={setForceRender} />,
+    },
+    {
+      key: '9',
+      label: `Stats`,
+      children: <PDFFile forceRender={forceRender}/>,
     },
 
   ];

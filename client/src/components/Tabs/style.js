@@ -250,3 +250,14 @@ export const TagContainer = styled.p`
   flex-wrap: wrap;
   gap: 5px;
 `;
+
+
+export const PDFContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 60vh;
+  align-items: center;
+`;

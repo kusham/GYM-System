@@ -247,3 +247,21 @@ export const getNewRegistrants = async () => {
   }
 };
 
+
+
+export const getUserCountByAge = async () => {
+  try {
+    const { data } = await API.get(`/api/user/getUserCountByAge`);
+    if (data.success) {
+      return data?.count;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    notification.error({
+      message: error?.response?.data?.message,
+      description: error?.response?.data?.error,
+    });
+  }
+};

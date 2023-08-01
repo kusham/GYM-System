@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   height: 9vh;
-  background-color: black;
-  opacity: 0.89;
+  background-color: rgba(0,0,0,0.5);
+  // opacity: 0.59;
   display: flex;
   justify-content: space-between;
   align-items: center;

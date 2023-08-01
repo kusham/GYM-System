@@ -7,6 +7,7 @@ import Workouts from "../Tabs/Workouts";
 import AssignedWorkouts from "../Tabs/AssignedWorkouts";
 import Profile from "../Tabs/Profile";
 import EquipmentRequest from "../Tabs/EquipmentRequest";
+import PDFFile from "../Tabs/PDFFile";
 
 const InstructorDashBoard = () => {
   const [forceRender, setForceRender] = useState(false);
@@ -54,6 +55,11 @@ const InstructorDashBoard = () => {
       key: "8",
       label: `Profile`,
       children: <Profile forceRender={forceRender} />,
+    },
+    {
+      key: '9',
+      label: `Stats`,
+      children: <PDFFile forceRender={forceRender}/>,
     },
   ];
   return (
